@@ -4,299 +4,359 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SestaApp – GRID</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231e3a6e'/%3E%3Cpath d='M16 6v20M6 16h20' stroke='%23fff' stroke-width='2.5' stroke-dasharray='3 2'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231e3a6e'/%3E%3Cpath d='M16 6v20M6 16h20' stroke='%23fff' stroke-width='2.5' stroke-dasharray='3 2'/%3E%3C/svg%3E">
+<script>try{const t=localStorage.getItem('sestaapp-grid-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=t}catch(e){}</script>
 <style>
 :root{
-  --navy:#1e3a6e; --navy-2:#162c54; --navy-soft:#e8eef8; --bg:#f2f4f8; --card:#fff;
-  --line:#e2e7ef; --line-2:#cfd7e3; --text:#1a2333; --muted:#64708a; --danger:#c0392b;
-  --danger-soft:#fdecea; --ok:#1d7a4d; --ok-soft:#e7f5ee; --warn:#9a6700; --warn-soft:#fff6dc;
-  --radius:12px; --shadow:0 1px 2px rgba(16,30,60,.06),0 4px 14px rgba(16,30,60,.06);
+  --bg:#f2f4f8; --card:#fff; --card-2:#f7f9fc; --line:#e3e8f0; --line-2:#d2d9e4; --text:#172033; --muted:#6a768d;
+  --accent:#1e3a6e; --accent-2:#284b8c; --accent-soft:#e8eef9; --accent-text:#1e3a6e; --on-accent:#fff;
+  --input:#fff; --pv-bg:#e2e6ed; --hover:#eef2f7;
+  --danger:#c0392b; --danger-soft:#fdecea; --ok:#1d7a4d; --ok-soft:#e5f4ec; --warn:#8a5d00; --warn-soft:#fff5d6;
+  --shadow:0 1px 2px rgba(16,30,60,.05),0 6px 20px rgba(16,30,60,.06); --shadow-pop:0 12px 40px rgba(16,30,60,.18);
+  --r-lg:18px; --r:12px; --r-sm:9px;
+  color-scheme:light;
+}
+[data-theme=dark]{
+  --bg:#0d121a; --card:#151c28; --card-2:#1a2230; --line:#252f42; --line-2:#334058; --text:#e4e9f1; --muted:#909cb3;
+  --accent:#4b7be0; --accent-2:#5f8ceb; --accent-soft:#1e2b45; --accent-text:#a3bff7; --on-accent:#fff;
+  --input:#101722; --pv-bg:#090d13; --hover:#1f2939;
+  --danger:#ff8172; --danger-soft:#3a1e1c; --ok:#62d49c; --ok-soft:#15301f; --warn:#f1c76c; --warn-soft:#342a12;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25); --shadow-pop:0 16px 48px rgba(0,0,0,.55);
+  color-scheme:dark;
 }
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
-body{font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;font-size:14px;color:var(--text);background:var(--bg);overflow:hidden}
+body{font-family:"Segoe UI",system-ui,-apple-system,Arial,sans-serif;font-size:14px;color:var(--text);background:var(--bg);overflow:hidden;transition:background .2s,color .2s}
 button,input,select,textarea{font:inherit;color:inherit}
-/* ---------- Horní lišta ---------- */
-.topbar{height:58px;display:flex;align-items:center;gap:16px;padding:0 20px;background:var(--card);border-bottom:1px solid var(--line);box-shadow:0 1px 3px rgba(16,30,60,.04);position:relative;z-index:5}
-.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:var(--navy);letter-spacing:.2px;white-space:nowrap}
-.brand-mark{width:30px;height:30px;border-radius:8px;background:var(--navy);display:grid;place-items:center}
-.brand small{font-weight:500;color:var(--muted);font-size:12.5px;margin-left:4px}
-.topbar .spacer{flex:1}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:36px;padding:0 14px;border-radius:9px;border:1px solid var(--line-2);background:#fff;cursor:pointer;font-weight:600;font-size:13.5px;color:var(--text);white-space:nowrap;transition:background .15s,border-color .15s,box-shadow .15s}
-.btn:hover{background:#f6f8fb;border-color:#b9c4d4}
-.btn:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+svg.i{width:17px;height:17px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* ---------- Tlačítka ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:38px;padding:0 15px;border-radius:var(--r);border:1px solid var(--line-2);background:var(--card);cursor:pointer;font-weight:600;font-size:13.5px;white-space:nowrap;transition:background .15s,border-color .15s,transform .05s}
+.btn:hover{background:var(--hover)}
+.btn:active{transform:translateY(1px)}
+.btn:focus-visible,.icon-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .btn:disabled{opacity:.45;cursor:not-allowed}
-.btn svg{width:16px;height:16px;flex:none}
-.btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
-.btn.primary:hover{background:var(--navy-2)}
-.btn.big{height:46px;font-size:15px;padding:0 20px;border-radius:11px}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn.primary:hover{background:var(--accent-2);border-color:var(--accent-2)}
+.btn.small{height:32px;padding:0 12px;font-size:13px;border-radius:10px}
 .btn.ghost{border-color:transparent;background:transparent}
-.btn.ghost:hover{background:#eef2f7}
-.btn.small{height:30px;padding:0 10px;font-size:12.5px;border-radius:8px}
-.btn.danger{color:var(--danger)}
-.icon-btn{width:30px;height:30px;padding:0;border-radius:8px;border:1px solid transparent;background:transparent;display:inline-grid;place-items:center;cursor:pointer;color:var(--muted)}
-.icon-btn:hover{background:#eef2f7;color:var(--text)}
-.icon-btn:disabled{opacity:.3;cursor:not-allowed;background:transparent}
-.icon-btn svg{width:16px;height:16px}
+.btn.ghost:hover{background:var(--hover)}
+.btn.dashed{border-style:dashed;background:transparent;color:var(--muted)}
+.btn.dashed:hover{color:var(--accent-text);border-color:var(--accent)}
+.icon-btn{width:38px;height:38px;padding:0;border-radius:var(--r);border:1px solid transparent;background:transparent;display:inline-grid;place-items:center;cursor:pointer;color:var(--muted);transition:background .15s,color .15s}
+.icon-btn:hover{background:var(--hover);color:var(--text)}
+.icon-btn.sm{width:30px;height:30px;border-radius:9px}
+.icon-btn:disabled{opacity:.3;cursor:not-allowed}
+.split{display:inline-flex;position:relative}
+.split .btn:first-child{border-radius:var(--r) 0 0 var(--r)}
+.split .btn.caret{border-radius:0 var(--r) var(--r) 0;padding:0 10px;border-left:1px solid rgba(255,255,255,.25)}
+/* ---------- Nabídky ---------- */
+.menu-wrap{position:relative;display:inline-flex}
+.menu{position:absolute;top:calc(100% + 6px);right:0;min-width:230px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-pop);padding:6px;z-index:40;display:none}
+.menu.open{display:block;animation:pop .14s ease-out}
+@keyframes pop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.menu button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:transparent;text-align:left;padding:9px 11px;border-radius:9px;cursor:pointer;font-size:13.5px}
+.menu button:hover{background:var(--hover)}
+.menu button:disabled{opacity:.4;cursor:not-allowed}
+.menu button .k{margin-left:auto;color:var(--muted);font-size:12px}
+.menu button.danger{color:var(--danger)}
+.menu hr{border:0;border-top:1px solid var(--line);margin:5px 4px}
+.menu .mh{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);padding:6px 11px 3px;font-weight:700}
+/* ---------- Horní lišta ---------- */
+.topbar{height:64px;display:flex;align-items:center;gap:10px;padding:0 16px 0 20px;background:var(--card);border-bottom:1px solid var(--line);position:relative;z-index:20}
+.brand{display:flex;align-items:center;gap:11px;font-weight:700;font-size:17px;white-space:nowrap}
+.brand-mark{width:34px;height:34px;border-radius:11px;background:var(--accent);display:grid;place-items:center}
+.brand small{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:-1px}
+.topbar .spacer{flex:1}
+.fileblock{display:flex;align-items:center;gap:6px;height:38px;padding:0 6px 0 12px;border:1px solid var(--line-2);border-radius:var(--r);background:var(--input);min-width:260px;max-width:440px;flex:0 1 420px;transition:border-color .15s,box-shadow .15s}
+.fileblock:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+.fileblock svg{color:var(--muted)}
+.fileblock input{flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:13.5px;font-weight:600;padding:0}
+.fileblock .ext{color:var(--muted);font-size:13px}
+.fileblock .tag{font-size:11px;color:var(--muted);background:var(--card-2);border:1px solid var(--line);border-radius:999px;padding:1px 8px;white-space:nowrap}
 /* ---------- Rozložení ---------- */
-.layout{display:grid;grid-template-columns:45% 55%;height:calc(100vh - 58px)}
-.left{overflow-y:auto;padding:18px 18px 40px 20px;border-right:1px solid var(--line)}
+.layout{display:grid;grid-template-columns:45% 55%;height:calc(100vh - 64px)}
+.left{display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--line)}
+.tabs{display:flex;gap:4px;padding:12px 20px 0;background:var(--bg)}
+.tabs button{flex:1;height:40px;border:1px solid transparent;border-radius:12px;background:transparent;font-weight:600;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .15s,color .15s}
+.tabs button:hover{color:var(--text);background:var(--hover)}
+.tabs button.on{background:var(--card);color:var(--accent-text);border-color:var(--line);box-shadow:var(--shadow)}
+.tab-body{flex:1;overflow-y:auto;padding:14px 20px 40px}
+.pane{display:none}.pane.on{display:block}
 .right{display:flex;flex-direction:column;min-width:0;min-height:0}
-.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:14px}
-.card-h{display:flex;align-items:center;gap:10px;padding:14px 16px 4px}
-.card-h h2{font-size:15px;margin:0;font-weight:700;color:var(--navy)}
-.card-h .num{width:22px;height:22px;border-radius:50%;background:var(--navy-soft);color:var(--navy);font-size:12px;font-weight:700;display:grid;place-items:center;flex:none}
-.card-h .hint{margin-left:auto;color:var(--muted);font-size:12.5px}
-.card-b{padding:10px 16px 16px}
-details.card>summary{list-style:none;cursor:pointer}
-details.card>summary::-webkit-details-marker{display:none}
-details.card>summary .chev{margin-left:auto;transition:transform .2s;color:var(--muted)}
-details.card[open]>summary .chev{transform:rotate(180deg)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);margin-bottom:14px;padding:16px 18px}
+.card h2{font-size:14.5px;margin:0 0 12px;font-weight:700;display:flex;align-items:center;gap:8px}
+.card h2 .hint{margin-left:auto;color:var(--muted);font-size:12.5px;font-weight:500}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
-.field{display:flex;flex-direction:column;gap:5px;min-width:0}
-.field>label,.lbl{font-size:12.5px;font-weight:600;color:#3a4558}
-.field .opt{font-weight:400;color:var(--muted)}
-input[type=text],input[type=number],select,textarea{width:100%;border:1px solid var(--line-2);border-radius:8px;padding:7px 10px;background:#fff;outline:none;transition:border-color .15s,box-shadow .15s}
-textarea{resize:vertical;min-height:54px;line-height:1.4}
-input[type=text]:focus,input[type=number]:focus,select:focus,textarea:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(30,58,110,.12)}
-.checks{display:flex;flex-wrap:wrap;gap:8px}
-.chk{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border:1px solid var(--line-2);border-radius:999px;cursor:pointer;user-select:none;font-size:13px;background:#fff}
-.chk:has(input:checked){background:var(--navy-soft);border-color:#b8c7e3;color:var(--navy);font-weight:600}
-.chk input{accent-color:var(--navy);margin:0}
-.sep{height:1px;background:var(--line);margin:14px 0}
-.sub-h{font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700;margin:4px 0 10px}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field>label,.lbl{font-size:12.5px;font-weight:600;color:var(--muted)}
+.field .opt{font-weight:400}
+input[type=text],input[type=number],select,textarea{width:100%;border:1px solid var(--line-2);border-radius:10px;padding:8px 11px;background:var(--input);outline:none;transition:border-color .15s,box-shadow .15s}
+textarea{resize:vertical;min-height:52px;line-height:1.4}
+input[type=text]:focus,input[type=number]:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 16%,transparent)}
+input.title-in{font-size:16px;font-weight:600;padding:10px 12px}
+.checks{display:flex;flex-wrap:wrap;gap:7px}
+.chk{display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border:1px solid var(--line-2);border-radius:999px;cursor:pointer;user-select:none;font-size:13px;background:var(--input)}
+.chk:has(input:checked){background:var(--accent-soft);border-color:color-mix(in srgb,var(--accent) 35%,transparent);color:var(--accent-text);font-weight:600}
+.chk input{accent-color:var(--accent);margin:0}
+.seg{display:inline-flex;padding:3px;gap:2px;border:1px solid var(--line);border-radius:12px;background:var(--card-2)}
+.seg button{border:0;background:transparent;padding:5px 11px;border-radius:9px;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--muted);white-space:nowrap;transition:background .15s,color .15s}
+.seg button:hover{color:var(--text)}
+.seg button.on{background:var(--card);color:var(--accent-text);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+[data-theme=dark] .seg button.on{background:var(--accent-soft)}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.row .grow{flex:1}
+details.more{border:1px solid var(--line);border-radius:14px;margin-top:12px;background:var(--card-2)}
+details.more>summary{list-style:none;cursor:pointer;padding:10px 14px;font-size:13px;font-weight:600;color:var(--muted);display:flex;align-items:center;gap:8px;user-select:none}
+details.more>summary::-webkit-details-marker{display:none}
+details.more>summary:hover{color:var(--text)}
+details.more>summary .chev{margin-left:auto;transition:transform .2s}
+details.more[open]>summary .chev{transform:rotate(180deg)}
+details.more .in{padding:2px 14px 14px}
+.sub-h{font-size:11.5px;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);font-weight:700;margin:14px 0 9px}
+.sub-h:first-child{margin-top:4px}
 /* posuvníky */
-.slider{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 10px;margin-bottom:9px}
-.slider label{font-size:13px;color:#2c3648}
-.slider output{font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:700;color:var(--navy);background:var(--navy-soft);border-radius:6px;padding:1px 7px;min-width:58px;text-align:center}
-.slider input{grid-column:1/-1;width:100%;accent-color:var(--navy);margin:2px 0 0}
+.slider{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2px 10px;margin-bottom:10px}
+.slider label{font-size:13px}
+.slider output{font-variant-numeric:tabular-nums;font-size:12px;font-weight:700;color:var(--accent-text);background:var(--accent-soft);border-radius:999px;padding:2px 9px;min-width:60px;text-align:center}
+.slider input{grid-column:1/-1;width:100%;accent-color:var(--accent);margin:3px 0 0}
 .slider.disabled{opacity:.45}
 /* otázky */
-.q{border:1px solid var(--line);border-radius:11px;margin-bottom:12px;background:#fbfcfe;transition:border-color .15s,box-shadow .15s}
-.q.overflow{border-color:var(--danger);box-shadow:0 0 0 3px rgba(192,57,43,.14)}
-.q-h{display:flex;align-items:center;gap:8px;padding:9px 10px 8px 12px;border-bottom:1px solid var(--line)}
-.q-no{width:26px;height:26px;border-radius:8px;background:var(--navy);color:#fff;font-weight:700;display:grid;place-items:center;font-size:13px;flex:none}
-.q-h select{width:auto;padding:5px 8px;font-size:13px}
+.q{border:1px solid var(--line);border-radius:16px;margin-bottom:10px;background:var(--card-2);transition:border-color .15s,box-shadow .15s}
+.q.overflow{border-color:var(--danger);box-shadow:0 0 0 3px color-mix(in srgb,var(--danger) 18%,transparent)}
+.q-h{display:flex;align-items:center;gap:8px;padding:9px 8px 9px 12px;position:relative}
+.q-no{width:28px;height:28px;border-radius:9px;background:var(--accent);color:var(--on-accent);font-weight:700;display:grid;place-items:center;font-size:13px;flex:none}
+.q-h select{width:auto;padding:5px 30px 5px 10px;font-size:13px;border-radius:9px}
 .q-h .pts{display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--muted)}
-.q-h .pts input{width:58px;padding:5px 6px}
-.q-h .tools{margin-left:auto;display:flex;gap:2px}
-.q-b{padding:10px 12px 12px;display:flex;flex-direction:column;gap:9px}
+.q-h .pts input{width:58px;padding:5px 7px;border-radius:9px}
+.q-h .sum{flex:1;min-width:0;color:var(--muted);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.q-h .tools{margin-left:auto;display:flex;gap:2px;align-items:center}
+.q-h .chev{transition:transform .2s}
+.q.collapsed .q-h .chev{transform:rotate(-90deg)}
+.q.collapsed .q-b{display:none}
+.q:not(.collapsed) .q-h .sum{visibility:hidden}
+.q-b{padding:2px 14px 14px;display:flex;flex-direction:column;gap:9px}
 .q-warn{display:none;font-size:12.5px;color:var(--danger);font-weight:600}
 .q.overflow .q-warn{display:block}
-.opt-row{display:grid;grid-template-columns:auto 22px 1fr;align-items:center;gap:8px}
-.opt-row .L{font-weight:700;width:18px;color:#3a4558}
-.opt-row input[type=radio]{accent-color:var(--ok);width:16px;height:16px;margin:0}
+.opt-row{display:grid;grid-template-columns:22px 20px 1fr 30px;align-items:center;gap:8px}
+.opt-row .L{font-weight:700;color:var(--muted)}
+.opt-row input[type=radio]{accent-color:var(--ok);width:17px;height:17px;margin:0;cursor:pointer}
 .secret{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
 .secret svg{width:14px;height:14px}
-.inline{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}
-.seg{display:inline-flex;border:1px solid var(--line-2);border-radius:8px;overflow:hidden;background:#fff}
-.seg button{border:0;background:transparent;padding:5px 11px;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--muted)}
-.seg button+button{border-left:1px solid var(--line-2)}
-.seg button.on{background:var(--navy);color:#fff}
-.add-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.add-row .note{color:var(--muted);font-size:12.5px;margin-left:auto}
-.banner{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;margin-bottom:14px;font-size:13px}
-.banner.info{background:var(--navy-soft);color:var(--navy)}
+.banner{display:flex;align-items:center;gap:10px;padding:10px 12px 10px 14px;border-radius:14px;margin-bottom:14px;font-size:13px;background:var(--accent-soft);color:var(--accent-text)}
 .banner .grow{flex:1}
-.notice{font-size:12.5px;line-height:1.45;padding:9px 11px;border-radius:9px;margin-top:8px}
+.notice{font-size:12.5px;line-height:1.45;padding:10px 12px;border-radius:12px;margin-top:10px}
 .notice.ok{background:var(--ok-soft);color:var(--ok)}
 .notice.warn{background:var(--warn-soft);color:var(--warn)}
-.notice.err{background:var(--danger-soft);color:var(--danger)}
-.notice .btn{margin-top:7px}
+.notice .btn{margin-top:8px}
 /* logo */
-.logo-row{display:flex;gap:14px;align-items:center}
-.logo-thumb{width:84px;height:84px;border:1px dashed var(--line-2);border-radius:10px;display:grid;place-items:center;background:#fff;flex:none;overflow:hidden;color:var(--muted);font-size:11px;text-align:center}
-.logo-thumb img{max-width:76px;max-height:76px}
-/* export */
-.export{display:flex;flex-direction:column;gap:9px}
-.export .row{display:flex;gap:9px;flex-wrap:wrap}
-.export .meta{font-size:12.5px;color:var(--muted)}
+.logo-row{display:flex;gap:16px;align-items:center}
+.logo-thumb{width:96px;height:96px;border:1px dashed var(--line-2);border-radius:16px;display:grid;place-items:center;background:#fff;flex:none;overflow:hidden;color:#7a869c;font-size:11px;text-align:center;padding:6px}
+.logo-thumb img{max-width:84px;max-height:84px}
+.foot-note{font-size:12px;color:var(--muted);text-align:center;line-height:1.5;margin-top:6px}
 /* ---------- Náhled ---------- */
-.pv-bar{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--card);border-bottom:1px solid var(--line);flex-wrap:wrap}
-.pv-bar .title{font-weight:700;color:var(--navy);margin-right:6px}
-.pv-bar .stat{margin-left:auto;font-size:12.5px;color:var(--muted)}
-.pv-alert{display:none;align-items:center;gap:10px;padding:10px 16px;background:var(--danger-soft);color:var(--danger);font-weight:600;font-size:13px;border-bottom:1px solid #f3c6c0}
+.pv-bar{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap;background:var(--bg)}
+.pv-bar .lbl{font-size:12.5px}
+.pv-bar .spacer{flex:1}
+.pv-alert{display:none;align-items:center;gap:10px;margin:12px 16px 0;padding:10px 12px 10px 14px;border-radius:14px;background:var(--danger-soft);color:var(--danger);font-weight:600;font-size:13px}
 .pv-alert.show{display:flex}
 .pv-alert .grow{flex:1}
-.pv-alert .btn{color:var(--danger);border-color:#e9b1aa}
-.pv-scroll{flex:1;overflow:auto;padding:24px;background:#e4e8ef;min-height:0}
-.pv-page{margin:0 auto;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.12),0 12px 32px rgba(16,30,60,.14);width:max-content}
+.pv-alert .btn{color:var(--danger);border-color:color-mix(in srgb,var(--danger) 40%,transparent);background:transparent}
+.pv-scroll{flex:1;overflow:auto;padding:24px;background:var(--pv-bg);min-height:0}
+.pv-page{margin:0 auto;background:#fff;border-radius:4px;box-shadow:0 2px 6px rgba(0,0,0,.12),0 14px 36px rgba(16,30,60,.16);width:max-content;overflow:hidden}
 .pv-page svg{display:block}
 #preview text{font-kerning:none;font-variant-ligatures:none;font-feature-settings:"kern" 0,"liga" 0,"clig" 0,"calt" 0;white-space:pre;text-rendering:geometricPrecision}
-.pv-foot{text-align:center;font-size:12px;color:var(--muted);padding:12px 0 0}
-.loading{padding:60px;text-align:center;color:var(--muted)}
+.pv-foot{text-align:center;font-size:12px;color:var(--muted);padding:14px 0 0}
+.loading{padding:60px;text-align:center;color:#6a768d}
 /* ---------- Modální okna a toast ---------- */
-.modal-bg{position:fixed;inset:0;background:rgba(15,25,45,.42);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}
+.modal-bg{position:fixed;inset:0;background:rgba(8,14,26,.5);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;backdrop-filter:blur(2px)}
 .modal-bg.show{display:flex}
-.modal{background:#fff;border-radius:14px;max-width:520px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.25);padding:22px 22px 18px}
-.modal h3{margin:0 0 10px;font-size:17px;color:var(--navy)}
-.modal .body{font-size:14px;line-height:1.5;color:#2c3648}
-.modal .body table{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px}
-.modal .body td{padding:4px 6px;border-bottom:1px solid var(--line)}
+.modal{background:var(--card);border:1px solid var(--line);border-radius:20px;max-width:520px;width:100%;box-shadow:var(--shadow-pop);padding:22px 22px 18px;animation:pop .16s ease-out}
+.modal h3{margin:0 0 10px;font-size:17px}
+.modal .body{font-size:14px;line-height:1.5}
+.modal .body table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+.modal .body td{padding:5px 6px;border-bottom:1px solid var(--line)}
 .modal .body td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
 .modal .actions{display:flex;justify-content:flex-end;gap:9px;margin-top:18px;flex-wrap:wrap}
-.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#1b2538;color:#fff;padding:11px 18px;border-radius:10px;font-size:13.5px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:60;max-width:80vw}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);background:#1b2538;color:#fff;padding:12px 18px;border-radius:14px;font-size:13.5px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:60;max-width:80vw;box-shadow:var(--shadow-pop)}
+[data-theme=dark] .toast{background:#e4e9f1;color:#111}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.toast.err{background:var(--danger)}
+.toast.err{background:var(--danger);color:#fff}
 .hidden{display:none!important}
-@media (max-width:1100px){.layout{grid-template-columns:50% 50%}}
+@media (max-width:1250px){.brand small{display:none}.fileblock{min-width:200px}}
+@media (max-width:1100px){.layout{grid-template-columns:50% 50%}.fileblock .tag{display:none}}
 </style>
 </head>
 <body>
 <header class="topbar">
   <div class="brand">
-    <div class="brand-mark"><svg width="18" height="18" viewBox="0 0 18 18"><rect x="1" y="1" width="16" height="16" rx="2" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M9 1v16M1 9h16" stroke="#fff" stroke-width="1.4" stroke-dasharray="2 1.6"/></svg></div>
-    SestaApp – GRID <small>čtyři testy na jedné A4</small>
+    <div class="brand-mark"><svg width="18" height="18" viewBox="0 0 18 18"><rect x="1" y="1" width="16" height="16" rx="3" fill="none" stroke="#fff" stroke-width="1.6"/><path d="M9 1v16M1 9h16" stroke="#fff" stroke-width="1.4" stroke-dasharray="2 1.6"/></svg></div>
+    <div>SestaApp – GRID<small>krátké testy k rozstřižení</small></div>
   </div>
   <div class="spacer"></div>
-  <button class="btn ghost" id="btnNew" title="Vymazat aktuální zadání a začít znovu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M12 12v6M9 15h6"/></svg>Nový test</button>
-  <button class="btn ghost" id="btnOpen" title="Načíst dříve uložený projekt (JSON)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Otevřít projekt</button>
-  <button class="btn ghost" id="btnSave" title="Uložit zadání, nastavení a logo do souboru JSON"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 3h11l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M7 3v6h8M7 21v-7h10v7"/></svg>Uložit projekt</button>
-  <button class="btn primary" id="btnPdfTop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>Stáhnout PDF</button>
+  <label class="fileblock" title="Název stahovaného souboru – lze přepsat">
+    <svg class="i" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>
+    <input id="inFile" spellcheck="false" maxlength="120" aria-label="Název souboru">
+    <span class="ext">.pdf</span>
+    <span class="tag" id="fileTag">automaticky</span>
+    <button class="icon-btn sm hidden" id="btnFileReset" title="Vrátit automatický název"><svg class="i" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>
+  </label>
+  <div class="split menu-wrap">
+    <button class="btn primary" id="btnDl"><svg class="i" viewBox="0 0 24 24"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 20h16"/></svg>Stáhnout PDF</button>
+    <button class="btn primary caret" id="btnDlMore" title="Další možnosti stažení"><svg class="i" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button>
+    <div class="menu" id="menuDl">
+      <button data-act="pdf"><svg class="i" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6"/></svg>Test pro žáky (PDF)</button>
+      <button data-act="key"><svg class="i" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9m-3 3 3 3m-6 0 2 2"/></svg>Klíč správných odpovědí (PDF)</button>
+      <hr>
+      <button data-act="save"><svg class="i" viewBox="0 0 24 24"><path d="M5 3h11l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M7 3v6h8M7 21v-7h10v7"/></svg>Projekt k pozdějším úpravám (JSON)</button>
+    </div>
+  </div>
+  <button class="icon-btn" id="btnTheme" title="Přepnout tmavý / světlý režim"></button>
+  <div class="menu-wrap">
+    <button class="icon-btn" id="btnMore" title="Nabídka"><svg class="i" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="19" cy="12" r="1.3"/></svg></button>
+    <div class="menu" id="menuMore">
+      <button data-act="new"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Nový test</button>
+      <button data-act="open"><svg class="i" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>Otevřít projekt…</button>
+      <button data-act="save"><svg class="i" viewBox="0 0 24 24"><path d="M5 3h11l5 5v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"/><path d="M7 3v6h8M7 21v-7h10v7"/></svg>Uložit projekt</button>
+      <hr>
+      <button data-act="sample"><svg class="i" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/></svg>Načíst ukázkový test</button>
+      <button data-act="reset" class="danger"><svg class="i" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Obnovit výchozí vzhled</button>
+    </div>
+  </div>
   <input type="file" id="fileProject" accept=".json,application/json" class="hidden">
 </header>
 
 <main class="layout">
-  <section class="left" id="left">
-    <div class="banner info hidden" id="sampleBanner">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8h.01M11 12h1v5h1"/></svg>
-      <span class="grow">Zobrazuje se ukázkový test z informatiky. Můžete ho upravit, nebo začít s prázdným testem.</span>
-      <button class="btn small" id="btnClearSample">Vymazat ukázku</button>
-      <button class="icon-btn" id="btnHideBanner" title="Skrýt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-    </div>
-
-    <!-- 1. Základní informace -->
-    <div class="card">
-      <div class="card-h"><span class="num">1</span><h2>Základní informace o testu</h2></div>
-      <div class="card-b">
-        <div class="field" style="margin-bottom:10px">
-          <label for="inTitle">Název testu</label>
-          <input type="text" id="inTitle" maxlength="120" placeholder="např. Programování – cyklus FOR">
+  <section class="left">
+    <nav class="tabs" id="tabs">
+      <button data-tab="test" class="on"><svg class="i" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11M4 6h.01M4 12h.01M4 18h.01"/></svg>Test</button>
+      <button data-tab="style"><svg class="i" viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Vzhled</button>
+      <button data-tab="logo"><svg class="i" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>Logo</button>
+    </nav>
+    <div class="tab-body" id="tabBody">
+      <!-- ===== TEST ===== -->
+      <div class="pane on" data-pane="test">
+        <div class="banner hidden" id="sampleBanner">
+          <svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8h.01M11 12h1v5h1"/></svg>
+          <span class="grow">Toto je ukázkový test. Upravte ho, nebo začněte s prázdným.</span>
+          <button class="btn small" id="btnClearSample">Vymazat ukázku</button>
+          <button class="icon-btn sm" id="btnHideBanner" title="Skrýt"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
         </div>
-        <div class="field" style="margin-bottom:10px">
-          <label for="inSubtitle">Podnadpis / tematická oblast <span class="opt">(nepovinné)</span></label>
-          <input type="text" id="inSubtitle" maxlength="160" placeholder="např. Opakování 8. ročníku">
-        </div>
-        <div class="grid2">
-          <div class="field"><label for="inSubject">Předmět <span class="opt">(nepovinné)</span></label><input type="text" id="inSubject" maxlength="60" placeholder="např. Informatika"></div>
-          <div class="field"><label for="inClass">Třída <span class="opt">(nepovinné)</span></label><input type="text" id="inClass" maxlength="30" placeholder="např. 8. A"></div>
-        </div>
-        <div class="sep"></div>
-        <div class="sub-h">Pole na testu pro žáka</div>
-        <div class="checks">
-          <label class="chk"><input type="checkbox" data-field="name">Jméno a příjmení</label>
-          <label class="chk"><input type="checkbox" data-field="date">Datum</label>
-          <label class="chk"><input type="checkbox" data-field="cls">Třída</label>
-          <label class="chk"><input type="checkbox" data-field="points">Počet bodů</label>
-        </div>
-        <div class="checks" style="margin-top:8px">
-          <label class="chk"><input type="checkbox" data-field="autoMax">Doplnit maximum bodů</label>
-          <label class="chk"><input type="checkbox" data-field="showQPoints">Body u každé otázky</label>
-        </div>
-      </div>
-    </div>
-
-    <!-- 2. Otázky -->
-    <div class="card">
-      <div class="card-h"><span class="num">2</span><h2>Otázky</h2><span class="hint" id="qCount"></span></div>
-      <div class="card-b">
-        <div id="qList"></div>
-        <div class="add-row">
-          <button class="btn small" data-add="abcd">+ Výběr ABCD</button>
-          <button class="btn small" data-add="yn">+ ANO / NE</button>
-          <button class="btn small" data-add="open">+ Otevřená otázka</button>
-          <span class="note" id="addNote"></span>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. Vzhled -->
-    <details class="card" id="styleCard">
-      <summary class="card-h" style="padding-bottom:14px"><span class="num">3</span><h2>Vzhled a rozložení</h2>
-        <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
-      <div class="card-b" style="padding-top:0">
-        <div class="field">
-          <label for="selFont">Písmo</label>
-          <select id="selFont"></select>
-        </div>
-        <div id="fontNotice"></div>
-        <div class="sep"></div>
-        <div class="sub-h">Velikost písma</div>
-        <div id="sizeSliders"></div>
-        <div class="checks" style="margin:2px 0 4px"><label class="chk"><input type="checkbox" id="chkQBold">Tučné zadání otázek</label></div>
-        <div class="sep"></div>
-        <div class="sub-h">Odsazení a rozestupy</div>
-        <div id="spaceSliders"></div>
-        <div class="sep"></div>
-        <div class="sub-h">Rozložení</div>
-        <div class="inline" style="margin-bottom:10px">
-          <span class="lbl">Odpovědi ABCD</span>
-          <div class="seg" id="segAbcd"><button data-v="auto">Automaticky</button><button data-v="1">Pod sebou</button><button data-v="2">Ve 2 sloupcích</button></div>
-        </div>
-        <div id="boxSlider"></div>
-        <div class="checks">
-          <label class="chk"><input type="checkbox" id="chkCut">Čáry pro rozstřižení</label>
-          <label class="chk"><input type="checkbox" id="chkRule">Čára pod hlavičkou</label>
-        </div>
-        <div style="margin-top:14px"><button class="btn small" id="btnResetStyle">Obnovit výchozí vzhled</button></div>
-      </div>
-    </details>
-
-    <!-- 4. Logo -->
-    <details class="card" id="logoCard">
-      <summary class="card-h" style="padding-bottom:14px"><span class="num">4</span><h2>Logo školy</h2>
-        <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
-      <div class="card-b" style="padding-top:0">
-        <div class="logo-row">
-          <div class="logo-thumb" id="logoThumb"></div>
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn small" id="btnLogo">Nahrát logo (PNG, JPG, SVG)</button>
-              <button class="btn small danger" id="btnLogoRemove">Odebrat</button>
-            </div>
-            <label class="chk" style="align-self:flex-start"><input type="checkbox" id="chkLogo">Zobrazit logo na testu</label>
-            <span style="font-size:12px;color:var(--muted)">Max. 2 MB. Poměr stran se zachová.</span>
+        <div class="card">
+          <h2>Hlavička testu</h2>
+          <input type="text" class="title-in" id="inTitle" maxlength="120" placeholder="Název testu, např. Programování – cyklus FOR">
+          <div class="row" style="margin-top:12px">
+            <span class="lbl">Skupina</span>
+            <div class="seg" id="segGroup"><button data-v="">Bez označení</button><button data-v="A">A</button><button data-v="B">B</button><button data-v="C">C</button><button data-v="D">D</button></div>
           </div>
-          <input type="file" id="fileLogo" accept=".png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml" class="hidden">
+          <details class="more" id="moreHeader">
+            <summary><svg class="i" viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/></svg>Podnadpis, předmět a pole pro žáka<svg class="i chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="in">
+              <div class="field" style="margin-bottom:10px"><label for="inSubtitle">Podnadpis / tematická oblast</label><input type="text" id="inSubtitle" maxlength="160" placeholder="např. Opakování 8. ročníku"></div>
+              <div class="grid2">
+                <div class="field"><label for="inSubject">Předmět</label><input type="text" id="inSubject" maxlength="60" placeholder="např. Informatika"></div>
+                <div class="field"><label for="inClass">Třída</label><input type="text" id="inClass" maxlength="30" placeholder="např. 8. A"></div>
+              </div>
+              <div class="sub-h">Pole pro žáka na testu</div>
+              <div class="checks">
+                <label class="chk"><input type="checkbox" data-field="name">Jméno a příjmení</label>
+                <label class="chk"><input type="checkbox" data-field="date">Datum</label>
+                <label class="chk"><input type="checkbox" data-field="cls">Třída</label>
+                <label class="chk"><input type="checkbox" data-field="points">Počet bodů</label>
+                <label class="chk"><input type="checkbox" data-field="autoMax">Doplnit maximum bodů</label>
+                <label class="chk"><input type="checkbox" data-field="showQPoints">Body u otázek</label>
+              </div>
+            </div>
+          </details>
         </div>
-        <div class="sep"></div>
-        <div id="logoSliders"></div>
-        <label class="chk" style="margin-bottom:8px"><input type="checkbox" id="chkLogoAlign">Zarovnat k vnitřnímu okraji testu</label>
-        <div id="logoOffsetSliders"></div>
-      </div>
-    </details>
-
-    <!-- 5. Export -->
-    <div class="card">
-      <div class="card-h"><span class="num">5</span><h2>Vytvoření PDF</h2></div>
-      <div class="card-b export">
-        <div class="row">
-          <button class="btn primary big" id="btnPdf"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0-5-5m5 5 5-5M4 19h16"/></svg>Stáhnout PDF</button>
-          <button class="btn big" id="btnKey"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9m-3 3 3 3m-6 0 2 2"/></svg>Klíč správných odpovědí</button>
+        <div class="card">
+          <h2>Otázky <span class="hint" id="qCount"></span></h2>
+          <div id="qList"></div>
+          <div class="menu-wrap" style="width:100%">
+            <button class="btn dashed" id="btnAdd" style="width:100%"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Přidat otázku</button>
+            <div class="menu" id="menuAdd" style="left:0;right:auto;width:100%">
+              <button data-add="abcd"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg>Výběr z možností<span class="k">2–4 odpovědi</span></button>
+              <button data-add="yn"><svg class="i" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8 12 3 3 5-6"/></svg>ANO / NE<span class="k">zaškrtnutí políčka</span></button>
+              <button data-add="open"><svg class="i" viewBox="0 0 24 24"><path d="M4 18h16M4 13h16M4 8h9"/></svg>Otevřená otázka<span class="k">linky na odpověď</span></button>
+            </div>
+          </div>
         </div>
-        <div class="meta" id="exportMeta"></div>
       </div>
-    </div>
-    <div style="font-size:12px;color:var(--muted);text-align:center;line-height:1.5">
-      Vše se zpracovává jen v tomto prohlížeči. Aplikace nepotřebuje internet ani žádné další soubory.<br>Rozpracovaný test se průběžně ukládá do tohoto prohlížeče.
+      <!-- ===== VZHLED ===== -->
+      <div class="pane" data-pane="style">
+        <div class="card">
+          <h2>Písmo</h2>
+          <select id="selFont"></select>
+          <div id="fontNotice"></div>
+        </div>
+        <div class="card">
+          <h2>Velikost písma</h2>
+          <div id="sizeSliders"></div>
+          <label class="chk"><input type="checkbox" id="chkQBold">Tučné zadání otázek</label>
+        </div>
+        <div class="card">
+          <h2>Rozložení</h2>
+          <div class="row" style="margin-bottom:12px"><span class="lbl grow">Odpovědi u výběru z možností</span>
+            <div class="seg" id="segAbcd"><button data-v="auto">Automaticky</button><button data-v="1">Pod sebou</button><button data-v="2">Ve 2 sloupcích</button></div></div>
+          <div class="checks">
+            <label class="chk"><input type="checkbox" id="chkCut">Čáry pro rozstřižení</label>
+            <label class="chk"><input type="checkbox" id="chkRule">Čára pod hlavičkou</label>
+          </div>
+          <details class="more">
+            <summary><svg class="i" viewBox="0 0 24 24"><path d="M21 3H3M21 21H3M12 7v10M9 10l3-3 3 3M9 14l3 3 3-3"/></svg>Odsazení a rozestupy<svg class="i chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="in"><div id="spaceSliders"></div><div id="boxSlider"></div></div>
+          </details>
+        </div>
+        <div style="text-align:center"><button class="btn small ghost" id="btnResetStyle"><svg class="i" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>Obnovit výchozí vzhled</button></div>
+      </div>
+      <!-- ===== LOGO ===== -->
+      <div class="pane" data-pane="logo">
+        <div class="card">
+          <h2>Logo školy</h2>
+          <div class="logo-row">
+            <div class="logo-thumb" id="logoThumb"></div>
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <div class="row">
+                <button class="btn small" id="btnLogo"><svg class="i" viewBox="0 0 24 24"><path d="M12 15V3m0 0-5 5m5-5 5 5M4 21h16"/></svg>Nahrát logo</button>
+                <button class="btn small ghost" id="btnLogoRemove">Odebrat</button>
+              </div>
+              <label class="chk" style="align-self:flex-start"><input type="checkbox" id="chkLogo">Zobrazit na testu</label>
+              <span style="font-size:12px;color:var(--muted)">PNG, JPG nebo SVG do 2 MB. Poměr stran se zachová.</span>
+            </div>
+            <input type="file" id="fileLogo" accept=".png,.jpg,.jpeg,.svg,image/png,image/jpeg,image/svg+xml" class="hidden">
+          </div>
+        </div>
+        <div class="card">
+          <h2>Velikost a umístění</h2>
+          <div id="logoSliders"></div>
+          <label class="chk" style="margin-bottom:10px"><input type="checkbox" id="chkLogoAlign">Zarovnat k vnitřnímu okraji testu</label>
+          <div id="logoOffsetSliders"></div>
+        </div>
+      </div>
+      <div class="foot-note">Vše se zpracovává jen v tomto prohlížeči, bez internetu. Rozpracovaný test se průběžně ukládá.</div>
     </div>
   </section>
 
   <section class="right">
     <div class="pv-bar">
-      <span class="title">Náhled tisku</span>
-      <div class="seg" id="segView"><button data-v="page">Celá A4</button><button data-v="quarter">Detail čtvrtiny</button></div>
-      <div class="seg" id="segZoom"><button data-v="0.75">75 %</button><button data-v="1">100 %</button><button data-v="fit">Přizpůsobit</button></div>
-      <span class="stat" id="pvStat"></span>
+      <span class="lbl">Kopií na A4</span>
+      <div class="seg" id="segCopies"><button data-v="4">4</button><button data-v="6">6</button><button data-v="8">8</button></div>
+      <div class="spacer"></div>
+      <div class="seg" id="segView"><button data-v="page">Celá A4</button><button data-v="quarter">Detail testu</button></div>
+      <div class="menu-wrap">
+        <button class="btn small" id="btnZoom" title="Velikost zobrazení"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg><span id="zoomLbl">Přizpůsobit</span></button>
+        <div class="menu" id="menuZoom" style="min-width:160px">
+          <button data-zoom="0.75">75 %</button><button data-zoom="1">100 %</button><button data-zoom="1.5">150 %</button><button data-zoom="fit">Přizpůsobit oknu</button>
+        </div>
+      </div>
     </div>
     <div class="pv-alert" id="pvAlert">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+      <svg class="i" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
       <span class="grow" id="pvAlertText">Test přesahuje dostupný prostor.</span>
       <button class="btn small" id="btnOptimize">Automaticky optimalizovat…</button>
     </div>
     <div class="pv-scroll" id="pvScroll">
       <div class="pv-page" id="pvPage"><div class="loading">Načítám písmo…</div></div>
-      <div class="pv-foot" id="pvFoot">Náhled odpovídá výslednému PDF (A4, 210 × 297 mm, čtyři testy 105 × 148,5 mm).</div>
+      <div class="pv-foot" id="pvFoot"></div>
     </div>
   </section>
 </main>
@@ -307,8 +367,8 @@ input[type=text]:focus,input[type=number]:focus,select:focus,textarea:focus{bord
 <script>
 'use strict';
 /* =====================================================================
-   SestaApp – GRID
-   Jednosouborová aplikace pro tvorbu krátkých testů (4 × A6 na A4).
+   SestaApp – GRID 2.0
+   Jednosouborová aplikace pro tvorbu krátkých testů (4, 6 nebo 8 kopií na A4).
    Bez externích knihoven: vlastní výpočet rozložení, náhled v SVG
    a vlastní generátor PDF s vloženými TrueType písmy (vektorový text).
    ===================================================================== */
@@ -320,13 +380,25 @@ const DEFAULT_LOGO = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAoAAAAHUCAIA
 /* ---------- Konstanty ---------- */
 const PT = 25.4 / 72;          // 1 pt v mm
 const MM = 72 / 25.4;          // 1 mm v pt
-const QW = 105, QH = 148.5;    // čtvrtina A4 v mm
 const PW = 210, PH = 297;      // A4 v mm
 const BASE_LH = 1.15;          // základní výška řádku (násobek velikosti písma)
 const STORE_KEY = 'sestaapp-grid-v1';
 const SYSFONT_KEY = 'sestaapp-grid-sysfonts';
-const MAX_Q = 5, MIN_Q = 2;
+const THEME_KEY = 'sestaapp-grid-theme';
+const MAX_Q = 5, MIN_Q = 2, MIN_OPT = 2, MAX_OPT = 4;
+const LETTERS = ['A', 'B', 'C', 'D'];
 const CZ_TEST = 'ěščřžýáíéůúťďňóĚŠČŘŽÝÁÍÉŮÚŤĎŇÓ';
+
+/* Rozměr jedné kopie podle počtu kopií na A4 (vždy 2 sloupce). */
+function cellOf(S) {
+  const rows = (S.style.copies || 4) / 2;
+  return { cols: 2, rows, w: PW / 2, h: PH / rows };
+}
+function cellOffsets(S) {
+  const c = cellOf(S), out = [];
+  for (let r = 0; r < c.rows; r++) for (let k = 0; k < c.cols; k++) out.push([k * c.w, r * c.h]);
+  return out;
+}
 
 const FONT_DEFS = {
   arial:   { label: 'Arial', note: 'univerzální, dobře čitelný', fb: 'Liberation Sans', metric: true, serif: false,
@@ -367,6 +439,8 @@ const uid = () => Math.random().toString(36).slice(2, 10);
 const num = (v, def, a, b) => { const n = Number(v); return Number.isFinite(n) ? clamp(n, a, b) : def; };
 const str = (v, max) => (typeof v === 'string' ? v : '').replace(/\r\n?/g, '\n').replace(/[\u0000-\u0008\u000B-\u001F\u007F]/g, '').slice(0, max);
 const fmtCz = (n, d = 1) => Number(n).toLocaleString('cs-CZ', { minimumFractionDigits: 0, maximumFractionDigits: d });
+const SVGNS = 'http://www.w3.org/2000/svg';
+const sv = (tag, attrs) => { const e = document.createElementNS(SVGNS, tag); for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v); return e; };
 function el(tag, attrs = {}, ...kids) {
   const e = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs)) {
@@ -379,23 +453,43 @@ function el(tag, attrs = {}, ...kids) {
   for (const c of kids.flat()) if (c != null) e.append(c.nodeType ? c : document.createTextNode(String(c)));
   return e;
 }
+const ICONS = {
+  up: 'M12 19V5m0 0-6 6m6-6 6 6', down: 'M12 5v14m0 0-6-6m6 6 6-6',
+  dup: 'M9 9h10v10H9zM5 15V5h10', del: 'M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3',
+  eye: 'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zm10 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
+  dots: 'M5 12h.01M12 12h.01M19 12h.01', chev: 'm6 9 6 6 6-6', x: 'M6 6l12 12M18 6 6 18', plus: 'M12 5v14M5 12h14',
+  sun: 'M12 3v2M12 19v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M3 12h2M19 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8z',
+  moon: 'M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z',
+};
+const icon = d => { const s = document.createElementNS(SVGNS, 'svg'); s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('class', 'i'); s.append(sv('path', { d })); return s; };
 function toast(msg, err = false) {
   const t = $('#toast'); t.textContent = msg; t.className = 'toast show' + (err ? ' err' : '');
   clearTimeout(toast._t); toast._t = setTimeout(() => t.className = 'toast' + (err ? ' err' : ''), err ? 5200 : 2800);
 }
 function b64ToBytes(b64) { const s = atob(b64); const u = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) u[i] = s.charCodeAt(i); return u; }
 function bytesToB64(u8) { let s = ''; for (let i = 0; i < u8.length; i += 0x8000) s += String.fromCharCode.apply(null, u8.subarray(i, i + 0x8000)); return btoa(s); }
-function safeFileName(title, prefix = 'GRID') {
-  const base = (title || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+function autoFileName(S) {
+  const base = (S.info.title || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
     .split(/[^A-Za-z0-9]+/).filter(Boolean).map(w => w[0].toUpperCase() + w.slice(1)).join('_').slice(0, 80);
-  return prefix + '_' + (base || 'Test');
+  return 'GRID_' + (base || 'Test') + (S.info.group ? '_skupina_' + S.info.group : '');
 }
+function cleanFileName(s) { return String(s || '').replace(/[\\/:*?"<>|\u0000-\u001F]/g, '').replace(/\.pdf$/i, '').trim().replace(/[. ]+$/, '').slice(0, 120); }
+function fileName(S) { return cleanFileName(S.info.fileName) || autoFileName(S); }
 function download(bytes, name, mime) {
   const blob = new Blob([bytes], { type: mime });
   const url = URL.createObjectURL(blob);
   const a = el('a', { href: url, download: name }); document.body.append(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 4000);
 }
+
+/* ---------- Nabídky (rozbalovací menu) ---------- */
+function closeMenus(except) { $$('.menu.open').forEach(m => { if (m !== except) m.classList.remove('open'); }); }
+function bindMenu(btn, menu) {
+  btn.addEventListener('click', e => { e.stopPropagation(); closeMenus(menu); menu.classList.toggle('open'); });
+  menu.addEventListener('click', e => { if (e.target.closest('button')) menu.classList.remove('open'); });
+}
+document.addEventListener('click', () => closeMenus());
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenus(); });
 
 /* =====================================================================
    MODÁLNÍ OKNO
@@ -420,7 +514,7 @@ function modal(title, body, buttons) {
    STAV APLIKACE
    ===================================================================== */
 function defaultStyle() {
-  return { font: 'arial', titleSize: 13, qSize: 10, aSize: 9.5, infoSize: 7.5, qBold: true,
+  return { font: 'arial', copies: 4, titleSize: 13, qSize: 10, aSize: 9.5, infoSize: 7.5, qBold: true,
     pad: 6, titleGap: 3, qGap: 4, qaGap: 1.5, lineSpacing: 1.15, ansIndent: 4,
     abcdLayout: 'auto', boxSize: 3.5, cutLines: true, headerRule: true };
 }
@@ -429,6 +523,7 @@ function newQuestion(type = 'abcd') {
     lines: 2, lineStyle: 'solid', lineHeight: 7, model: '' };
 }
 function defaultLogo() { return { dataUrl: DEFAULT_LOGO, mime: 'image/png', w: 0, h: 0, show: true, size: 12, align: true, top: 6, right: 6 }; }
+const defaultFields = () => ({ name: true, date: true, cls: true, points: true, autoMax: true, showQPoints: true });
 function sampleState() {
   const q1 = Object.assign(newQuestion('abcd'), { text: 'Kolikrát se provede tělo cyklu for i in range(4)?', options: ['3krát', '4krát', '5krát', 'ani jednou'], correct: 1, points: 1 });
   const q2 = Object.assign(newQuestion('yn'), { text: 'Funkce input() vrací vždy text, i když uživatel napíše číslo.', ynCorrect: 'ano', points: 1 });
@@ -436,16 +531,15 @@ function sampleState() {
     model: 'Pojmenované místo v paměti, do kterého si program uloží hodnotu (číslo nebo text) a může ji později použít nebo změnit.' });
   return {
     isSample: true,
-    info: { title: 'Informatika – základy Pythonu', subtitle: 'Proměnné, vstup a cyklus FOR', subject: 'Informatika', className: '8. A' },
-    fields: { name: true, date: true, cls: true, points: true, autoMax: true, showQPoints: true },
-    questions: [q1, q2, q3], style: defaultStyle(), logo: defaultLogo(),
+    info: { title: 'Informatika – základy Pythonu', subtitle: 'Proměnné, vstup a cyklus FOR', subject: 'Informatika', className: '8. A', group: '', fileName: '' },
+    fields: defaultFields(), questions: [q1, q2, q3], style: defaultStyle(), logo: defaultLogo(),
   };
 }
 function emptyState(keep) {
   return {
     isSample: false,
-    info: { title: '', subtitle: '', subject: keep ? keep.info.subject : '', className: '' },
-    fields: keep ? { ...keep.fields } : { name: true, date: true, cls: true, points: true, autoMax: true, showQPoints: true },
+    info: { title: '', subtitle: '', subject: keep ? keep.info.subject : '', className: '', group: '', fileName: '' },
+    fields: keep ? { ...keep.fields } : defaultFields(),
     questions: [newQuestion('abcd'), newQuestion('open')],
     style: keep ? { ...keep.style } : defaultStyle(),
     logo: keep ? { ...keep.logo } : defaultLogo(),
@@ -457,6 +551,7 @@ function sanitizeState(o) {
   const d = defaultStyle(), s = o.style || {};
   const style = {
     font: FONT_DEFS[s.font] ? s.font : 'arial',
+    copies: [4, 6, 8].includes(Number(s.copies)) ? Number(s.copies) : 4,
     titleSize: num(s.titleSize, d.titleSize, 9, 18), qSize: num(s.qSize, d.qSize, 7, 14),
     aSize: num(s.aSize, d.aSize, 6, 13), infoSize: num(s.infoSize, d.infoSize, 6, 11),
     qBold: s.qBold !== false, pad: num(s.pad, d.pad, 3, 15), titleGap: num(s.titleGap, d.titleGap, 0, 12),
@@ -466,17 +561,19 @@ function sanitizeState(o) {
     boxSize: num(s.boxSize, d.boxSize, 3, 6), cutLines: s.cutLines !== false, headerRule: s.headerRule !== false,
   };
   const i = o.info || {}, f = o.fields || {};
-  const info = { title: str(i.title, 120), subtitle: str(i.subtitle, 160), subject: str(i.subject, 60), className: str(i.className, 30) };
+  const info = { title: str(i.title, 120), subtitle: str(i.subtitle, 160), subject: str(i.subject, 60), className: str(i.className, 30),
+    group: LETTERS.includes(i.group) ? i.group : '', fileName: cleanFileName(str(i.fileName, 120)) };
   const fields = {};
-  for (const k of ['name', 'date', 'cls', 'points', 'autoMax', 'showQPoints']) fields[k] = f[k] !== false;
+  for (const k of Object.keys(defaultFields())) fields[k] = f[k] !== false;
   let qs = Array.isArray(o.questions) ? o.questions.slice(0, MAX_Q) : [];
   qs = qs.map(q => {
     const n = newQuestion(['abcd', 'yn', 'open'].includes(q && q.type) ? q.type : 'abcd');
     if (!q || typeof q !== 'object') return n;
     n.text = str(q.text, 400); n.points = num(q.points, 1, 0, 50);
-    const opts = Array.isArray(q.options) ? q.options : [];
-    n.options = [0, 1, 2, 3].map(k => str(opts[k], 150));
-    n.correct = Number.isInteger(q.correct) && q.correct >= 0 && q.correct <= 3 ? q.correct : null;
+    const opts = Array.isArray(q.options) ? q.options.slice(0, MAX_OPT) : [];
+    n.options = opts.map(x => str(x, 150));
+    while (n.options.length < MIN_OPT) n.options.push('');
+    n.correct = Number.isInteger(q.correct) && q.correct >= 0 && q.correct < n.options.length ? q.correct : null;
     n.ynCorrect = q.ynCorrect === 'ano' || q.ynCorrect === 'ne' ? q.ynCorrect : null;
     n.lines = Math.round(num(q.lines, 2, 1, 5));
     n.lineStyle = ['solid', 'dotted', 'blank'].includes(q.lineStyle) ? q.lineStyle : 'solid';
@@ -548,7 +645,6 @@ function parseTTF(buffer) {
     if (dv.getUint16(os) >= 2 && tables['OS/2'].length >= 90) f.capH = dv.getInt16(os + 88) || f.capH;
   }
   f.italic = tables.post ? dv.getInt32(tables.post.offset + 4) / 65536 : 0;
-  // cmap
   f.cmap = new Map();
   const cm = tables.cmap.offset, ns = dv.getUint16(cm + 2);
   let best = null, bestScore = -1;
@@ -709,7 +805,7 @@ function glyphOf(f, cp) { return f.cmap.get(cp); }
 function fitText(F, s, bold) {
   // znaky, které písmo neumí, nahradí otazníkem (náhled i PDF pak zobrazí totéž)
   const f = bold ? F.b : F.r; let out = '';
-  for (const ch of s) { const cp = ch.codePointAt(0); if (cp === 10) continue; if (glyphOf(f, cp) === undefined && cp !== 32) { missingChars.add(ch); out += '?'; } else out += ch; }
+  for (const ch of s) { const cp = ch.codePointAt(0); if (cp === 10) { out += '\n'; continue; } if (glyphOf(f, cp) === undefined && cp !== 32) { missingChars.add(ch); out += '?'; } else out += ch; }
   return out;
 }
 function measure(F, s, bold, sizePt) {
@@ -720,8 +816,7 @@ function measure(F, s, bold, sizePt) {
 /* Zalomení textu do řádků; widthFor(i) vrací dostupnou šířku i-tého řádku v mm. */
 function wrapLines(F, text, bold, size, widthFor) {
   const lines = [];
-  const paras = String(text).split('\n');
-  for (const para of paras) {
+  for (const para of String(text).split('\n')) {
     const words = para.split(' ').filter(w => w.length);
     let line = '';
     for (let w of words) {
@@ -744,24 +839,25 @@ const lineH = (size, ls) => size * PT * BASE_LH * ls;
 const baseOff = (size, lh) => { const em = size * PT; return (lh - em * 1.12) / 2 + em * 0.9; };
 
 /* =====================================================================
-   VÝPOČET ROZLOŽENÍ JEDNOHO TESTU (čtvrtiny)
+   VÝPOČET ROZLOŽENÍ JEDNOHO TESTU (jedné kopie)
    Výstupem je seznam kreslicích příkazů v mm. Z něj se kreslí
    náhled (SVG) i PDF, proto náhled přesně odpovídá výsledku.
    ===================================================================== */
 function logoBox(S) {
-  const L = S.logo;
+  const L = S.logo, CW = cellOf(S).w;
   if (!L.show || !L.dataUrl || !(L.w > 0 && L.h > 0)) return null;
   const ar = L.w / L.h; let w, h;
   if (ar >= 1) { w = L.size; h = L.size / ar; } else { h = L.size; w = L.size * ar; }
   const top = L.align ? S.style.pad : L.top, right = L.align ? S.style.pad : L.right;
-  return { x: QW - right - w, y: top, w, h };
+  return { x: CW - right - w, y: top, w, h };
 }
 function totalPoints(S) { return S.questions.reduce((a, q) => a + (Number(q.points) || 0), 0); }
 
 function layoutTest(S, F) {
   missingChars = new Set();
   const st = S.style, ls = st.lineSpacing, pad = st.pad;
-  const x0 = pad, xr = QW - pad;
+  const { w: CW, h: CH } = cellOf(S);
+  const x0 = pad, xr = CW - pad;
   const ops = [], qBounds = [];
   const logo = logoBox(S);
   if (logo) ops.push({ t: 'image', ...logo });
@@ -785,7 +881,18 @@ function layoutTest(S, F) {
   /* ---- hlavička ---- */
   let y = pad, header = false;
   const I = S.info;
-  if (I.title.trim()) { y = block(I.title.trim(), { size: st.titleSize, bold: true, x: x0, y }).y; header = true; }
+  const tlh = lineH(st.titleSize, ls);
+  let tx = x0;
+  if (I.group) { // štítek skupiny (stejný na všech kopiích)
+    const bh = Math.min(tlh * 0.98, st.titleSize * PT * 1.25), lw = measure(F, I.group, true, st.titleSize * 0.82);
+    const bw = Math.max(bh, lw + 2.2), by = y + (tlh - bh) / 2;
+    ops.push({ t: 'rrect', x: x0, y: by, w: bw, h: bh, r: Math.min(1.4, bh / 3), lw: 0.35, gray: 0 });
+    T(x0 + (bw - lw) / 2, by + bh / 2 + st.titleSize * 0.82 * PT * 0.36, I.group, st.titleSize * 0.82, true);
+    tx = x0 + bw + 2; header = true;
+  }
+  if (I.title.trim()) y = block(I.title.trim(), { size: st.titleSize, bold: true, x: tx, y }).y;
+  else if (I.group) y += tlh;
+  if (I.title.trim()) header = true;
   if (I.subtitle.trim()) { y = block(I.subtitle.trim(), { size: st.infoSize + 0.5, x: x0, y: y + 0.2, gray: 0.2 }).y; header = true; }
   const meta = [I.subject.trim(), I.className.trim()].filter(Boolean).join('  ·  ');
   if (meta) { y = block(meta, { size: st.infoSize, x: x0, y: y + 0.2, gray: 0.35 }).y; header = true; }
@@ -793,7 +900,6 @@ function layoutTest(S, F) {
   // pole pro žáka
   const fs = st.infoSize, rowH = Math.max(lineH(fs, ls), 5.4);
   const fieldRow = (segs) => {
-    // segs: [{text}|{line:váha}|{gap}]
     const top = y, R = rightAt(top, rowH);
     let fixed = 0, wsum = 0;
     segs.forEach((s, k) => { if (s.text && k && segs[k - 1].line) s.pre = 0.8; });
@@ -822,8 +928,8 @@ function layoutTest(S, F) {
     items.push(Fd.autoMax && tp > 0 ? [{ text: 'Body:' }, { line: 0.6 }, { text: '/ ' + fmtCz(tp) }] : [{ text: 'Body:' }, { line: 0.5 }, { text: '/' }, { line: 0.5 }]);
   }
   if (items.length) {
-    const joined = []; items.forEach((it, i) => { if (i) joined.push({ gap: true }); joined.push(...it); });
-    if (!fieldRow(joined)) items.forEach(it => fieldRow(it));
+    const joined = []; items.forEach((it, i) => { if (i) joined.push({ gap: true }); joined.push(...it.map(s => ({ ...s }))); });
+    if (!fieldRow(joined)) items.forEach(it => fieldRow(it.map(s => ({ ...s }))));
   }
   if (header) {
     if (st.headerRule) { y += st.titleGap / 2 + 0.4; Ln(x0, y, rightAt(y - 0.1, 0.2), y, 0.25, 0.55); y += st.titleGap / 2 + 0.4; }
@@ -838,7 +944,6 @@ function layoutTest(S, F) {
     if (qi > 0) y += st.qGap;
     const top = y;
     const qlh = lineH(qs, ls);
-    // body vpravo
     let reserve = 0;
     if (S.fields.showQPoints && q.points > 0) {
       const pt = fmtCz(q.points) + ' b.';
@@ -852,7 +957,8 @@ function layoutTest(S, F) {
     const alh = lineH(as, ls), abo = baseOff(as, alh);
 
     if (q.type === 'abcd') {
-      const labels = ['A)', 'B)', 'C)', 'D)'];
+      const n = q.options.length;
+      const labels = LETTERS.slice(0, n).map(l => l + ')');
       const labW = Math.max(...labels.map(l => measure(F, l, false, as))) + 1.3;
       const colGap = 3, fullR = rightAt(y, alh);
       const colW = (fullR - ax - colGap) / 2;
@@ -861,18 +967,19 @@ function layoutTest(S, F) {
       if (st.abcdLayout === 'auto') two = opts.every(o => measure(F, o, false, as) <= colW - labW);
       const optGap = 0.5;
       if (two) {
-        for (let r = 0; r < 2; r++) {
+        for (let r = 0; r < Math.ceil(n / 2); r++) {
           if (r) y += optGap;
           const rt = y; let rb = y;
           for (let c = 0; c < 2; c++) {
-            const k = r * 2 + c, cx = ax + c * (colW + colGap);
+            const k = r * 2 + c; if (k >= n) break;
+            const cx = ax + c * (colW + colGap);
             T(cx, rt + abo, labels[k], as, false);
             rb = Math.max(rb, block(q.options[k].trim(), { size: as, x: cx + labW, y: rt, right: cx + colW }).y);
           }
           y = rb;
         }
       } else {
-        for (let k = 0; k < 4; k++) {
+        for (let k = 0; k < n; k++) {
           if (k) y += optGap;
           T(ax, y + abo, labels[k], as, false);
           y = block(q.options[k].trim(), { size: as, x: ax + labW, y }).y;
@@ -899,15 +1006,13 @@ function layoutTest(S, F) {
     }
     qBounds.push({ top, bottom: y });
   });
-  const limit = QH - pad;
-  return { ops, qBounds, bottom: y, limit, overflow: y - limit, missing: [...missingChars] };
+  const limit = CH - pad;
+  return { ops, qBounds, bottom: y, limit, overflow: y - limit, missing: [...missingChars], cw: CW, ch: CH };
 }
 
 /* =====================================================================
    ŽIVÝ NÁHLED (SVG)
    ===================================================================== */
-const SVGNS = 'http://www.w3.org/2000/svg';
-const sv = (tag, attrs) => { const e = document.createElementNS(SVGNS, tag); for (const [k, v] of Object.entries(attrs || {})) e.setAttribute(k, v); return e; };
 const g2c = g => { const v = Math.round(255 * g); return `rgb(${v},${v},${v})`; };
 let view = { mode: 'page', zoom: 'fit' };
 let lastLayout = null;
@@ -921,40 +1026,41 @@ function drawOpsSVG(parent, ops, F) {
       const l = sv('line', { x1: o.x1, y1: o.y1, x2: o.x2, y2: o.y2, stroke: g2c(o.gray), 'stroke-width': o.w, 'stroke-linecap': o.cap ? 'round' : 'butt' });
       if (o.dash) l.setAttribute('stroke-dasharray', o.dash.join(' '));
       parent.append(l);
-    } else if (o.t === 'rect') {
-      parent.append(sv('rect', { x: o.x, y: o.y, width: o.w, height: o.h, fill: 'none', stroke: g2c(o.gray), 'stroke-width': o.lw }));
+    } else if (o.t === 'rect' || o.t === 'rrect') {
+      parent.append(sv('rect', { x: o.x, y: o.y, width: o.w, height: o.h, rx: o.r || 0, fill: 'none', stroke: g2c(o.gray), 'stroke-width': o.lw }));
     } else if (o.t === 'image') {
       const im = sv('image', { x: o.x, y: o.y, width: o.w, height: o.h, preserveAspectRatio: 'none' });
       im.setAttribute('href', state.logo.dataUrl); parent.append(im);
     }
   }
 }
-function cutLineOps() {
-  return [
-    { t: 'line', x1: PW / 2, y1: 0, x2: PW / 2, y2: PH, w: 0.2, gray: 0.6, dash: [2, 1.5], cap: 0 },
-    { t: 'line', x1: 0, y1: PH / 2, x2: PW, y2: PH / 2, w: 0.2, gray: 0.6, dash: [2, 1.5], cap: 0 },
-  ];
+function cutLineOps(S) {
+  const c = cellOf(S), ops = [];
+  const L = (x1, y1, x2, y2) => ops.push({ t: 'line', x1, y1, x2, y2, w: 0.2, gray: 0.6, dash: [2, 1.5], cap: 0 });
+  L(PW / 2, 0, PW / 2, PH);
+  for (let r = 1; r < c.rows; r++) L(0, r * c.h, PW, r * c.h);
+  return ops;
 }
 function renderPreview(L, F) {
   const page = $('#pvPage');
-  const quarter = view.mode === 'quarter';
-  const vw = quarter ? QW : PW, vh = quarter ? QH : PH;
+  const single = view.mode === 'quarter';
+  const CW = L.cw, CH = L.ch;
+  const vw = single ? CW : PW, vh = single ? CH : PH;
   const svg = sv('svg', { id: 'preview', viewBox: `0 0 ${vw} ${vh}`, xmlns: SVGNS });
-  const defs = sv('defs'); const cp = sv('clipPath', { id: 'qclip' }); cp.append(sv('rect', { x: 0, y: 0, width: QW, height: QH })); defs.append(cp); svg.append(defs);
+  const defs = sv('defs'); const cp = sv('clipPath', { id: 'qclip' }); cp.append(sv('rect', { x: 0, y: 0, width: CW, height: CH })); defs.append(cp); svg.append(defs);
   svg.append(sv('rect', { x: 0, y: 0, width: vw, height: vh, fill: '#fff' }));
-  const offs = quarter ? [[0, 0]] : [[0, 0], [QW, 0], [0, QH], [QW, QH]];
+  const offs = single ? [[0, 0]] : cellOffsets(state);
   for (const [ox, oy] of offs) {
     const g = sv('g', { transform: `translate(${ox} ${oy})`, 'clip-path': 'url(#qclip)' });
     drawOpsSVG(g, L.ops, F);
-    if (L.overflow > 0.01) { // zvýraznění přetečení – jen v editoru
-      g.append(sv('rect', { x: 0, y: L.limit, width: QW, height: QH - L.limit, fill: 'rgba(192,57,43,0.13)' }));
-      g.append(sv('line', { x1: 0, y1: L.limit, x2: QW, y2: L.limit, stroke: '#c0392b', 'stroke-width': 0.35, 'stroke-dasharray': '1.2 0.8' }));
+    if (L.overflow > 0.01) { // zvýraznění přetečení – jen v editoru, ne v PDF
+      g.append(sv('rect', { x: 0, y: L.limit, width: CW, height: CH - L.limit, fill: 'rgba(192,57,43,0.13)' }));
+      g.append(sv('line', { x1: 0, y1: L.limit, x2: CW, y2: L.limit, stroke: '#c0392b', 'stroke-width': 0.35, 'stroke-dasharray': '1.2 0.8' }));
     }
     svg.append(g);
   }
-  if (!quarter && state.style.cutLines) drawOpsSVG(svg, cutLineOps(), F);
-  if (quarter) svg.append(sv('rect', { x: 0.1, y: 0.1, width: QW - 0.2, height: QH - 0.2, fill: 'none', stroke: '#c8d0dc', 'stroke-width': 0.2, 'stroke-dasharray': '1.5 1' }));
-  // velikost
+  if (!single && state.style.cutLines) drawOpsSVG(svg, cutLineOps(state), F);
+  if (single) svg.append(sv('rect', { x: 0.1, y: 0.1, width: CW - 0.2, height: CH - 0.2, fill: 'none', stroke: '#c8d0dc', 'stroke-width': 0.2, 'stroke-dasharray': '1.5 1' }));
   const pxPerMm = 96 / 25.4;
   let z = view.zoom;
   if (z === 'fit') {
@@ -963,13 +1069,14 @@ function renderPreview(L, F) {
   }
   svg.setAttribute('width', Math.round(vw * pxPerMm * z)); svg.setAttribute('height', Math.round(vh * pxPerMm * z));
   page.replaceChildren(svg);
-  $('#pvStat').textContent = (quarter ? '105 × 148,5 mm' : 'A4 · 210 × 297 mm') + ' · ' + Math.round(z * 100) + ' %';
+  $('#zoomLbl').textContent = view.zoom === 'fit' ? `Přizpůsobit (${Math.round(z * 100)} %)` : Math.round(z * 100) + ' %';
 }
 
 /* =====================================================================
    HLAVNÍ PŘEKRESLENÍ
    ===================================================================== */
 let renderQueued = false;
+const copiesWord = n => n + ' testů';
 function render() {
   if (renderQueued) return; renderQueued = true;
   requestAnimationFrame(async () => {
@@ -980,17 +1087,15 @@ function render() {
     await ensureLogoSize();
     const L = layoutTest(state, F); lastLayout = L;
     renderPreview(L, F);
-    // přetečení
     const over = L.overflow > 0.01;
     $('#pvAlert').classList.toggle('show', over);
-    if (over) $('#pvAlertText').textContent = `Test přesahuje dostupný prostor o ${fmtCz(L.overflow, 1)} mm. Zkraťte text nebo použijte automatickou optimalizaci.`;
+    if (over) $('#pvAlertText').textContent = `Test přesahuje dostupný prostor o ${fmtCz(L.overflow, 1)} mm.`;
     $$('#qList .q').forEach((c, i) => { const b = L.qBounds[i]; c.classList.toggle('overflow', !!(over && b && b.bottom > L.limit + 0.01)); });
-    const free = L.limit - L.bottom;
-    let foot = 'Náhled odpovídá výslednému PDF (A4, čtyři testy 105 × 148,5 mm).';
-    if (!over) foot += ` Volné místo dole: ${fmtCz(free, 1)} mm.`;
+    let foot = `A4 · ${copiesWord(state.style.copies)} po ${fmtCz(L.cw, 2)} × ${fmtCz(L.ch, 2)} mm · náhled odpovídá PDF.`;
+    if (!over) foot += ` Volné místo dole: ${fmtCz(L.limit - L.bottom, 1)} mm.`;
     if (L.missing.length) foot += ` Pozor: písmo neumí znaky ${L.missing.join(' ')} – nahrazeny otazníkem.`;
     $('#pvFoot').textContent = foot;
-    $('#exportMeta').textContent = `${state.questions.length} ${state.questions.length === 5 ? 'otázek' : 'otázky'} · celkem ${fmtCz(totalPoints(state))} b. · soubor ${safeFileName(state.info.title)}.pdf`;
+    syncFileUI();
   });
 }
 function changed() { persist(); render(); }
@@ -1017,7 +1122,6 @@ function sanitizeSVG(text) {
   };
   for (const a of Array.from(root.attributes)) if (a.name.toLowerCase().startsWith('on')) root.removeAttribute(a.name);
   walk(root);
-  // rozměry, aby šlo SVG spolehlivě vykreslit
   const vb = (root.getAttribute('viewBox') || '').split(/[\s,]+/).map(Number);
   const hasWH = parseFloat(root.getAttribute('width')) > 0 && parseFloat(root.getAttribute('height')) > 0 && !/%/.test(root.getAttribute('width') + root.getAttribute('height'));
   if (!hasWH) {
@@ -1049,7 +1153,7 @@ async function handleLogoFile(file) {
       mime = isPNG ? 'image/png' : 'image/jpeg';
       dataUrl = `data:${mime};base64,` + bytesToB64(buf);
       const im = await loadImage(dataUrl);
-      if (Math.max(im.naturalWidth, im.naturalHeight) > 1400) { // zmenšení kvůli ukládání
+      if (Math.max(im.naturalWidth, im.naturalHeight) > 1400) {
         const k = 1400 / Math.max(im.naturalWidth, im.naturalHeight);
         const c = el('canvas', { width: Math.round(im.naturalWidth * k), height: Math.round(im.naturalHeight * k) });
         c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
@@ -1106,14 +1210,14 @@ class PDFDoc {
     const out = new Uint8Array(len); let p = 0; for (const b of parts) { out.set(b, p); p += b.length; } return out;
   }
 }
-function pdfTextString(s) { // UTF-16BE hex pro metadata
+function pdfTextString(s) {
   let h = 'FEFF'; for (let i = 0; i < s.length; i++) h += s.charCodeAt(i).toString(16).padStart(4, '0'); return `<${h.toUpperCase()}>`;
 }
 /* Převede seznam stránek (kreslicí příkazy v mm) na PDF. */
 async function buildPDF(pages, F, title, logoImg) {
   const doc = new PDFDoc();
   const catalog = doc.ref(), pagesId = doc.ref(), info = doc.ref();
-  const used = { r: new Map(), b: new Map() }; // gid -> unicode
+  const used = { r: new Map(), b: new Map() };
   const H = PH * MM;
   const X = v => n3(v * MM), Y = v => n3(H - v * MM);
   const encodeText = (s, bold) => {
@@ -1121,12 +1225,18 @@ async function buildPDF(pages, F, title, logoImg) {
     for (const ch of s) { const cp = ch.codePointAt(0); let g = glyphOf(f, cp); if (g === undefined) g = glyphOf(f, 63) || 0; if (!map.has(g)) map.set(g, cp); hex += g.toString(16).padStart(4, '0'); }
     return hex;
   };
+  const rrectPath = o => {
+    const { x, y, w, h } = o, r = o.r, k = r * 0.5523;
+    const P = (a, b) => `${X(a)} ${Y(b)}`;
+    return `${P(x + r, y)} m ${P(x + w - r, y)} l ${P(x + w - r + k, y)} ${P(x + w, y + r - k)} ${P(x + w, y + r)} c ${P(x + w, y + h - r)} l ${P(x + w, y + h - r + k)} ${P(x + w - r + k, y + h)} ${P(x + w - r, y + h)} c ${P(x + r, y + h)} l ${P(x + r - k, y + h)} ${P(x, y + h - r + k)} ${P(x, y + h - r)} c ${P(x, y + r)} l ${P(x, y + r - k)} ${P(x + r - k, y)} ${P(x + r, y)} c h`;
+  };
   const drawOps = (ops) => {
     let c = '';
     for (const o of ops) {
       if (o.t === 'text') c += `BT ${n3(o.gray || 0)} g /F${o.bold ? 'B' : 'R'} ${n3(o.size)} Tf 1 0 0 1 ${X(o.x)} ${Y(o.y)} Tm <${encodeText(o.str, o.bold)}> Tj ET\n`;
       else if (o.t === 'line') c += `q ${n3(o.w * MM)} w ${n3(o.gray)} G ${o.cap ? 1 : 0} J ${o.dash ? '[' + o.dash.map(d => n3(d * MM)).join(' ') + '] 0 d' : ''} ${X(o.x1)} ${Y(o.y1)} m ${X(o.x2)} ${Y(o.y2)} l S Q\n`;
       else if (o.t === 'rect') c += `q ${n3(o.lw * MM)} w ${n3(o.gray)} G 0 J 0 j ${X(o.x)} ${Y(o.y + o.h)} ${n3(o.w * MM)} ${n3(o.h * MM)} re S Q\n`;
+      else if (o.t === 'rrect') c += `q ${n3(o.lw * MM)} w ${n3(o.gray)} G ${rrectPath(o)} S Q\n`;
       else if (o.t === 'image' && logoImg) c += `q ${n3(o.w * MM)} 0 0 ${n3(o.h * MM)} ${X(o.x)} ${Y(o.y + o.h)} cm /Im1 Do Q\n`;
       else if (o.t === 'clip') c += `q ${X(o.x)} ${Y(o.y + o.h)} ${n3(o.w * MM)} ${n3(o.h * MM)} re W n\n` + drawOps(o.ops) + 'Q\n';
     }
@@ -1134,7 +1244,6 @@ async function buildPDF(pages, F, title, logoImg) {
   };
   const pageIds = [];
   const contents = pages.map(ops => drawOps(ops));
-  // písma
   const fontRef = {};
   for (const w of ['r', 'b']) {
     if (!used[w].size) continue;
@@ -1162,7 +1271,6 @@ async function buildPDF(pages, F, title, logoImg) {
     await doc.setStream(tu, '', cmap);
     fontRef[w] = t0;
   }
-  // logo
   let imgRes = '';
   if (logoImg) {
     const im = doc.ref(); let smask = '';
@@ -1180,7 +1288,7 @@ async function buildPDF(pages, F, title, logoImg) {
   doc.set(pagesId, `<< /Type /Pages /Kids [${pageIds.map(p => p + ' 0 R').join(' ')}] /Count ${pageIds.length} >>`);
   doc.set(catalog, `<< /Type /Catalog /Pages ${pagesId} 0 R /ViewerPreferences << /PrintScaling /None >> >>`);
   const d = new Date(), pd = n => String(n).padStart(2, '0');
-  doc.set(info, `<< /Title ${pdfTextString(title || 'Test')} /Producer ${pdfTextString('SestaApp – GRID')} /Creator ${pdfTextString('SestaApp – GRID')} /CreationDate (D:${d.getFullYear()}${pd(d.getMonth() + 1)}${pd(d.getDate())}${pd(d.getHours())}${pd(d.getMinutes())}${pd(d.getSeconds())}) >>`);
+  doc.set(info, `<< /Title ${pdfTextString(title || 'Test')} /Producer ${pdfTextString('SestaApp – GRID 2.0')} /Creator ${pdfTextString('SestaApp – GRID 2.0')} /CreationDate (D:${d.getFullYear()}${pd(d.getMonth() + 1)}${pd(d.getDate())}${pd(d.getHours())}${pd(d.getMinutes())}${pd(d.getSeconds())}) >>`);
   return doc.build(catalog, info);
 }
 /* Logo převedené na rastr 600 dpi (RGB + průhlednost) pro PDF. */
@@ -1197,42 +1305,42 @@ async function logoForPdf(box) {
   const rgb = new Uint8Array(w * h * 3), alpha = new Uint8Array(w * h); let hasA = false;
   for (let i = 0, j = 0, a = 0; i < px.length; i += 4) {
     const A = px[i + 3]; alpha[a++] = A; if (A < 255) hasA = true;
-    // nepřednásobené barvy; plně průhledné body bílé
     if (A === 0) { rgb[j++] = 255; rgb[j++] = 255; rgb[j++] = 255; } else { rgb[j++] = px[i]; rgb[j++] = px[i + 1]; rgb[j++] = px[i + 2]; }
   }
   return { w, h, rgb, alpha: hasA ? alpha : null };
 }
 function translateOps(ops, dx, dy) {
   return ops.map(o => {
-    if (o.t === 'text' || o.t === 'image' || o.t === 'rect') return { ...o, x: o.x + dx, y: o.y + dy };
+    if (o.t === 'text' || o.t === 'image' || o.t === 'rect' || o.t === 'rrect') return { ...o, x: o.x + dx, y: o.y + dy };
     if (o.t === 'line') return { ...o, x1: o.x1 + dx, x2: o.x2 + dx, y1: o.y1 + dy, y2: o.y2 + dy };
     return o;
   });
 }
+let busy = false;
 async function exportPDF() {
-  const btns = [$('#btnPdf'), $('#btnPdfTop')]; btns.forEach(b => b.disabled = true);
+  if (busy) return; busy = true; $('#btnDl').disabled = true;
   try {
     const F = await ensureFont(state.style.font); await ensureLogoSize();
     const L = layoutTest(state, F);
     if (L.overflow > 0.01) {
-      const r = await modal('Test přesahuje dostupný prostor', `Obsah je o ${fmtCz(L.overflow, 1)} mm delší než čtvrtina A4. V PDF by byl spodní okraj testu oříznutý.\nDoporučuji nejdřív použít automatickou optimalizaci nebo zkrátit text.`,
+      const r = await modal('Test přesahuje dostupný prostor', `Obsah je o ${fmtCz(L.overflow, 1)} mm delší než jedna kopie testu. V PDF by byl spodní okraj oříznutý.\nDoporučuji nejdřív použít automatickou optimalizaci nebo zkrátit text.`,
         [{ label: 'Zrušit', value: null }, { label: 'Optimalizovat…', value: 'opt' }, { label: 'Přesto stáhnout', value: 'go', kind: 'primary' }]);
-      if (r === 'opt') return optimize();
+      if (r === 'opt') { busy = false; $('#btnDl').disabled = false; return optimize(); }
       if (r !== 'go') return;
     }
     let logoImg = null;
     const box = logoBox(state);
     if (box) { try { logoImg = await logoForPdf(box); } catch (e) { toast('Logo se nepodařilo vložit do PDF.', true); } }
     const page = [];
-    for (const [ox, oy] of [[0, 0], [QW, 0], [0, QH], [QW, QH]])
-      page.push({ t: 'clip', x: ox, y: oy, w: QW, h: QH, ops: translateOps(L.ops, ox, oy) });
-    if (state.style.cutLines) page.push(...cutLineOps());
+    for (const [ox, oy] of cellOffsets(state))
+      page.push({ t: 'clip', x: ox, y: oy, w: L.cw, h: L.ch, ops: translateOps(L.ops, ox, oy) });
+    if (state.style.cutLines) page.push(...cutLineOps(state));
     const bytes = await buildPDF([page], F, state.info.title, logoImg);
-    download(bytes, safeFileName(state.info.title) + '.pdf', 'application/pdf');
+    download(bytes, fileName(state) + '.pdf', 'application/pdf');
     const fs = fontStore[state.style.font];
-    toast('PDF bylo vytvořeno' + (fs.source === 'fallback' ? ` (písmo ${FONT_DEFS[state.style.font].fb}).` : '.'));
+    toast(`Staženo: ${fileName(state)}.pdf` + (fs.source === 'fallback' ? ` (písmo ${FONT_DEFS[state.style.font].fb})` : ''));
   } catch (e) { console.error(e); toast('PDF se nepodařilo vytvořit: ' + e.message, true); }
-  finally { btns.forEach(b => b.disabled = false); }
+  finally { busy = false; $('#btnDl').disabled = false; }
 }
 
 /* ---------- Klíč správných odpovědí ---------- */
@@ -1250,22 +1358,20 @@ async function exportKey() {
       y += after;
     };
     const rule = (gray = 0.75, w = 0.25) => { ops.push({ t: 'line', x1: M, y1: y, x2: R, y2: y, w, gray }); };
-    para('Klíč správných odpovědí', 18, true, M, 0, 1.5);
+    para('Klíč správných odpovědí' + (state.info.group ? ' – skupina ' + state.info.group : ''), 18, true, M, 0, 1.5);
     para(state.info.title.trim() || 'Test bez názvu', 13, true, M, 0, 0.5);
     const meta = [state.info.subtitle.trim(), state.info.subject.trim(), state.info.className.trim()].filter(Boolean).join('  ·  ');
     if (meta) para(meta, 10, false, M, 0.35, 0.5);
     y += 2; rule(0.2, 0.4); y += 5;
-    const typeName = { abcd: 'Výběr odpovědi ABCD', yn: 'ANO / NE', open: 'Otevřená otázka' };
-    const L = ['A', 'B', 'C', 'D'];
+    const typeName = { abcd: 'Výběr z možností', yn: 'ANO / NE', open: 'Otevřená otázka' };
     state.questions.forEach((q, i) => {
       if (y > PH - M - 30) newPage();
-      const top = y;
       const ptsTxt = fmtCz(q.points) + ' b.';
       const pw = measure(F, ptsTxt, true, 11);
-      T(R - pw, y + baseOff(11, lineH(11, 1.15)), ptsTxt, 11, true);
-      const nw = measure(F, '5.', true, 11) + 2;
-      T(M, y + baseOff(11, lineH(11, 1.15)), (i + 1) + '.', 11, true);
       const lh = lineH(11, 1.15), bo = baseOff(11, lh);
+      T(R - pw, y + bo, ptsTxt, 11, true);
+      const nw = measure(F, '5.', true, 11) + 2;
+      T(M, y + bo, (i + 1) + '.', 11, true);
       const lines = wrapLines(F, fitText(F, q.text.trim() || '(bez zadání)', true), true, 11, k => (k === 0 ? R - pw - 4 : R) - (M + nw));
       lines.forEach(s => { T(M + nw, y + bo, s, 11, true); y += lh; });
       y += 0.6;
@@ -1279,7 +1385,7 @@ async function exportKey() {
       T(ix, y + baseOff(9, lineH(9, 1.15)), typeName[q.type], 9, false, 0.45); y += lineH(9, 1.15) + 0.4;
       if (q.type === 'abcd') {
         if (q.correct == null) sub('Správná odpověď:', 'není označena', 0.55);
-        else sub('Správná odpověď:', `${L[q.correct]}) ${q.options[q.correct].trim()}`);
+        else sub('Správná odpověď:', `${LETTERS[q.correct]}) ${q.options[q.correct].trim()}`);
       } else if (q.type === 'yn') {
         sub('Správná odpověď:', q.ynCorrect ? q.ynCorrect.toUpperCase() : 'není označena', q.ynCorrect ? 0 : 0.55);
       } else {
@@ -1287,14 +1393,13 @@ async function exportKey() {
       }
       y += 3; rule(); y += 4;
     });
-    const tp = totalPoints(state);
-    para(`Celkem bodů: ${fmtCz(tp)}`, 13, true, M, 0, 1);
+    para(`Celkem bodů: ${fmtCz(totalPoints(state))}`, 13, true, M, 0, 1);
     para('Vytvořeno v aplikaci SestaApp – GRID. Tento klíč nepatří k žákovské verzi testu.', 8.5, false, M, 0.5);
     pages.push(ops);
     const bytes = await buildPDF(pages, F, 'Klíč – ' + (state.info.title || 'Test'), null);
-    download(bytes, safeFileName(state.info.title) + '_klic.pdf', 'application/pdf');
+    download(bytes, fileName(state) + '_klic.pdf', 'application/pdf');
     const missing = state.questions.filter(q => (q.type === 'abcd' && q.correct == null) || (q.type === 'yn' && !q.ynCorrect)).length;
-    toast(missing ? `Klíč vytvořen. U ${missing} otázek chybí označení správné odpovědi.` : 'Klíč správných odpovědí byl vytvořen.', !!missing);
+    toast(missing ? `Klíč stažen. U ${missing} otázek chybí označení správné odpovědi.` : `Staženo: ${fileName(state)}_klic.pdf`, !!missing);
   } catch (e) { console.error(e); toast('Klíč se nepodařilo vytvořit: ' + e.message, true); }
 }
 
@@ -1321,7 +1426,7 @@ async function optimize() {
   for (let f = 0.98; f >= 0.3; f -= 0.02) { const c = scaledState(state, f); if (layoutTest(c, F).overflow <= 0) { found = c; break; } }
   layoutTest(state, F);
   if (!found) {
-    await modal('Test se nevejde ani po zmenšení', 'Ani při nejmenší povolené velikosti písma a rozestupů se test nevejde do čtvrtiny A4.\nZkraťte prosím texty otázek nebo odpovědí, snižte počet řádků u otevřených otázek, nebo odeberte některou otázku. Aplikace sama nic nemaže.', [{ label: 'Rozumím', value: 1, kind: 'primary' }]);
+    await modal('Test se nevejde ani po zmenšení', `Ani při nejmenší povolené velikosti písma a rozestupů se test nevejde do jedné kopie (${state.style.copies} na A4).\nZkraťte texty, snižte počet řádků u otevřených otázek, vypněte některá pole v hlavičce, nebo zvolte méně kopií na stránku. Aplikace sama nic nemaže.`, [{ label: 'Rozumím', value: 1, kind: 'primary' }]);
     return;
   }
   const a = state.style, b = found.style, rows = [];
@@ -1355,10 +1460,48 @@ function makeSlider(container, def, getObj, onChange) {
   container.append(row); return row;
 }
 const sliders = [];
+function setSeg(sel, val) { $$(sel + ' button').forEach(b => b.classList.toggle('on', b.dataset.v === String(val))); }
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  try { localStorage.setItem(THEME_KEY, t); } catch (e) {}
+  const b = $('#btnTheme'); b.replaceChildren(icon(t === 'dark' ? ICONS.sun : ICONS.moon));
+  b.title = t === 'dark' ? 'Přepnout na světlý režim' : 'Přepnout na tmavý režim';
+}
+function resetStyle() {
+  const font = state.style.font, copies = state.style.copies; state.style = defaultStyle(); state.style.font = font; state.style.copies = copies;
+  state.questions.forEach(q => q.lineHeight = 7);
+  syncStyleUI(); renderQuestions(); changed(); toast('Vzhled byl obnoven na výchozí hodnoty.');
+}
 function buildStaticControls() {
+  // téma
+  applyTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
+  $('#btnTheme').addEventListener('click', () => applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
+  // nabídky
+  bindMenu($('#btnDlMore'), $('#menuDl')); bindMenu($('#btnMore'), $('#menuMore'));
+  bindMenu($('#btnAdd'), $('#menuAdd')); bindMenu($('#btnZoom'), $('#menuZoom'));
+  const actions = { pdf: exportPDF, key: exportKey, save: saveProject, new: newTest, open: () => $('#fileProject').click(), sample: loadSample, reset: resetStyle };
+  $$('[data-act]').forEach(b => b.addEventListener('click', () => actions[b.dataset.act]()));
+  $('#btnDl').addEventListener('click', exportPDF);
+  // název souboru
+  const fi = $('#inFile');
+  fi.addEventListener('input', () => {
+    const v = cleanFileName(fi.value);
+    state.info.fileName = v && v !== autoFileName(state) ? v : '';
+    syncFileUI(true); persist();
+  });
+  fi.addEventListener('blur', () => syncFileUI());
+  fi.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); fi.blur(); } });
+  $('#btnFileReset').addEventListener('click', e => { e.preventDefault(); state.info.fileName = ''; syncFileUI(); persist(); });
+  // záložky
+  $$('#tabs button').forEach(b => b.addEventListener('click', () => {
+    $$('#tabs button').forEach(x => x.classList.toggle('on', x === b));
+    $$('.pane').forEach(p => p.classList.toggle('on', p.dataset.pane === b.dataset.tab));
+    $('#tabBody').scrollTop = 0;
+  }));
   // základní informace
   const bindText = (sel, key) => { const i = $(sel); i.addEventListener('input', () => { state.info[key] = str(i.value, Number(i.maxLength)); changed(); }); };
   bindText('#inTitle', 'title'); bindText('#inSubtitle', 'subtitle'); bindText('#inSubject', 'subject'); bindText('#inClass', 'className');
+  $$('#segGroup button').forEach(b => b.addEventListener('click', () => { state.info.group = b.dataset.v; setSeg('#segGroup', b.dataset.v); changed(); }));
   $$('[data-field]').forEach(c => c.addEventListener('change', () => { state.fields[c.dataset.field] = c.checked; changed(); }));
   // písma
   const sel = $('#selFont');
@@ -1375,12 +1518,8 @@ function buildStaticControls() {
   $('#chkQBold').addEventListener('change', e => { state.style.qBold = e.target.checked; changed(); });
   $('#chkCut').addEventListener('change', e => { state.style.cutLines = e.target.checked; changed(); });
   $('#chkRule').addEventListener('change', e => { state.style.headerRule = e.target.checked; changed(); });
-  $$('#segAbcd button').forEach(b => b.addEventListener('click', () => { state.style.abcdLayout = b.dataset.v; syncStyleUI(); changed(); }));
-  $('#btnResetStyle').addEventListener('click', () => {
-    const font = state.style.font; state.style = defaultStyle(); state.style.font = font;
-    state.questions.forEach(q => q.lineHeight = 7);
-    syncStyleUI(); renderQuestions(); changed(); toast('Vzhled byl obnoven na výchozí hodnoty.');
-  });
+  $$('#segAbcd button').forEach(b => b.addEventListener('click', () => { state.style.abcdLayout = b.dataset.v; setSeg('#segAbcd', b.dataset.v); changed(); }));
+  $('#btnResetStyle').addEventListener('click', resetStyle);
   // logo
   $('#btnLogo').addEventListener('click', () => $('#fileLogo').click());
   $('#fileLogo').addEventListener('change', e => { handleLogoFile(e.target.files[0]); e.target.value = ''; });
@@ -1393,37 +1532,36 @@ function buildStaticControls() {
     state.questions.push(newQuestion(b.dataset.add)); renderQuestions(); changed();
     setTimeout(() => { const t = $$('#qList textarea.qtext').pop(); t && t.focus(); }, 30);
   }));
-  // export a projekty
-  $('#btnPdf').addEventListener('click', exportPDF);
-  $('#btnPdfTop').addEventListener('click', exportPDF);
-  $('#btnKey').addEventListener('click', exportKey);
-  $('#btnOptimize').addEventListener('click', optimize);
-  $('#btnSave').addEventListener('click', saveProject);
-  $('#btnOpen').addEventListener('click', () => $('#fileProject').click());
-  $('#fileProject').addEventListener('change', e => { openProject(e.target.files[0]); e.target.value = ''; });
-  $('#btnNew').addEventListener('click', newTest);
-  $('#btnClearSample').addEventListener('click', () => { state = emptyState(state); state.isSample = false; syncAll(); changed(); toast('Ukázka byla vymazána.'); });
+  // ukázka
+  $('#btnClearSample').addEventListener('click', () => { state = emptyState(state); syncAll(); changed(); toast('Ukázka byla vymazána.'); });
   $('#btnHideBanner').addEventListener('click', () => { state.isSample = false; $('#sampleBanner').classList.add('hidden'); persist(); });
+  $('#fileProject').addEventListener('change', e => { openProject(e.target.files[0]); e.target.value = ''; });
   // náhled
-  $$('#segView button').forEach(b => b.addEventListener('click', () => { view.mode = b.dataset.v; syncViewUI(); render(); }));
-  $$('#segZoom button').forEach(b => b.addEventListener('click', () => { view.zoom = b.dataset.v === 'fit' ? 'fit' : Number(b.dataset.v); syncViewUI(); render(); }));
+  $$('#segCopies button').forEach(b => b.addEventListener('click', () => {
+    state.style.copies = Number(b.dataset.v); setSeg('#segCopies', b.dataset.v); syncLogoUI(); changed();
+  }));
+  $$('#segView button').forEach(b => b.addEventListener('click', () => { view.mode = b.dataset.v; setSeg('#segView', view.mode); render(); }));
+  $$('#menuZoom button').forEach(b => b.addEventListener('click', () => { view.zoom = b.dataset.zoom === 'fit' ? 'fit' : Number(b.dataset.zoom); render(); }));
+  $('#btnOptimize').addEventListener('click', optimize);
   window.addEventListener('resize', () => { if (view.zoom === 'fit') render(); });
 }
-function syncViewUI() {
-  $$('#segView button').forEach(b => b.classList.toggle('on', b.dataset.v === view.mode));
-  $$('#segZoom button').forEach(b => b.classList.toggle('on', String(view.zoom) === b.dataset.v));
+function syncFileUI(typing) {
+  const fi = $('#inFile'), custom = !!state.info.fileName;
+  if (!typing && document.activeElement !== fi) fi.value = fileName(state);
+  $('#fileTag').classList.toggle('hidden', custom);
+  $('#btnFileReset').classList.toggle('hidden', !custom);
 }
 function syncStyleUI() {
   $('#selFont').value = state.style.font;
   sliders.forEach(s => s._sync());
   $('#chkQBold').checked = state.style.qBold; $('#chkCut').checked = state.style.cutLines; $('#chkRule').checked = state.style.headerRule;
-  $$('#segAbcd button').forEach(b => b.classList.toggle('on', b.dataset.v === state.style.abcdLayout));
+  setSeg('#segAbcd', state.style.abcdLayout); setSeg('#segCopies', state.style.copies);
   updateFontNotice();
 }
 function syncLogoUI() {
   const th = $('#logoThumb'); th.innerHTML = '';
   if (state.logo.dataUrl) th.append(el('img', { src: state.logo.dataUrl, alt: 'Logo' }));
-  else th.append(el('span', { text: 'Bez loga (zobrazí se jen zde)' }));
+  else th.append(el('span', { text: 'Bez loga' }));
   $('#chkLogo').checked = state.logo.show; $('#chkLogoAlign').checked = state.logo.align;
   $('#btnLogoRemove').disabled = !state.logo.dataUrl;
   $$('#logoOffsetSliders .slider').forEach(s => { s.classList.toggle('disabled', state.logo.align); s._input.disabled = state.logo.align; });
@@ -1432,25 +1570,27 @@ function syncLogoUI() {
 function syncInfoUI() {
   $('#inTitle').value = state.info.title; $('#inSubtitle').value = state.info.subtitle;
   $('#inSubject').value = state.info.subject; $('#inClass').value = state.info.className;
+  setSeg('#segGroup', state.info.group);
   $$('[data-field]').forEach(c => c.checked = !!state.fields[c.dataset.field]);
   $('#sampleBanner').classList.toggle('hidden', !state.isSample);
+  syncFileUI();
 }
-function syncAll() { syncInfoUI(); syncStyleUI(); syncLogoUI(); renderQuestions(); }
+function syncAll() { syncInfoUI(); syncStyleUI(); syncLogoUI(); renderQuestions(); setSeg('#segView', view.mode); }
 
 function updateFontNotice() {
   const key = state.style.font, d = FONT_DEFS[key], fs = fontStore[key], box = $('#fontNotice');
   box.innerHTML = '';
   if (fs && fs.source === 'system') {
-    box.append(el('div', { class: 'notice ok', text: `✓ ${d.label} – originální písmo z Windows. Vloží se do PDF, náhled odpovídá tisku.` }));
+    box.append(el('div', { class: 'notice ok', text: `✓ ${d.label} – originální písmo z Windows. Vloží se do PDF.` }));
     return;
   }
   const msg = d.metric
-    ? `Používá se ${d.fb} – metricky shodná náhrada písma ${d.label} (stejné šířky znaků, rozložení testu se nezmění). Vzhled písmen se nepatrně liší.`
+    ? `Používá se ${d.fb} – metricky shodná náhrada písma ${d.label}. Rozložení testu se nezmění, tvar písmen se nepatrně liší.`
     : `Používá se ${d.fb} – vzhledově blízká náhrada písma ${d.label}. Po načtení originálu se může mírně změnit zalomení řádků.`;
   const n = el('div', { class: 'notice warn' }, el('div', { text: msg }));
-  if (sysFontInfo.error === 'unsupported') n.append(el('div', { style: 'margin-top:5px', text: 'Tento prohlížeč neumožňuje použít písma z Windows. Funguje to v Chrome a Edge (při otevření souboru z disku nebo přes https).' }));
+  if (sysFontInfo.error === 'unsupported') n.append(el('div', { style: 'margin-top:5px', text: 'Tento prohlížeč neumožňuje použít písma z Windows. Funguje to v Chrome a Edge.' }));
   else {
-    if (sysFontInfo.error === 'denied') n.append(el('div', { style: 'margin-top:5px', text: 'Přístup k písmům nebyl povolen. Povolit ho lze kliknutím na ikonu zámku vlevo od adresy.' }));
+    if (sysFontInfo.error === 'denied') n.append(el('div', { style: 'margin-top:5px', text: 'Přístup k písmům nebyl povolen. Povolit ho lze kliknutím na ikonu vlevo od adresy.' }));
     else if (sysFontInfo.error === 'notfound') n.append(el('div', { style: 'margin-top:5px', text: `Písmo ${d.label} nebylo v počítači nalezeno.` }));
     n.append(el('button', { class: 'btn small', text: 'Použít originální písma z Windows', onclick: async () => { await loadSystemFonts(true); updateFontNotice(); render(); } }));
   }
@@ -1458,81 +1598,106 @@ function updateFontNotice() {
 }
 
 /* ---------- Karty otázek ---------- */
-const ICONS = {
-  up: 'M12 19V5m0 0-6 6m6-6 6 6', down: 'M12 5v14m0 0-6-6m6 6 6-6',
-  dup: 'M9 9h10v10H9zM5 15V5h10', del: 'M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3',
-  eye: 'M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zm10 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
-};
-const icon = d => { const s = document.createElementNS(SVGNS, 'svg'); s.setAttribute('viewBox', '0 0 24 24'); s.setAttribute('fill', 'none'); s.setAttribute('stroke', 'currentColor'); s.setAttribute('stroke-width', '2'); s.setAttribute('stroke-linecap', 'round'); s.setAttribute('stroke-linejoin', 'round'); s.append(sv('path', { d })); return s; };
+const collapsed = new Set();
+const TYPE_LABEL = { abcd: 'Výběr z možností', yn: 'ANO / NE', open: 'Otevřená otázka' };
+function updateCount() {
+  const n = state.questions.length;
+  $('#qCount').textContent = `${n} z ${MAX_Q} · celkem ${fmtCz(totalPoints(state))} b.`;
+}
 function renderQuestions() {
   const list = $('#qList'); list.innerHTML = '';
   const n = state.questions.length;
   state.questions.forEach((q, i) => list.append(questionCard(q, i, n)));
-  $('#qCount').textContent = `${n} z ${MAX_Q} otázek · ${fmtCz(totalPoints(state))} b.`;
-  $$('[data-add]').forEach(b => b.disabled = n >= MAX_Q);
-  $('#addNote').textContent = n >= MAX_Q ? 'Dosažen maximální počet 5 otázek.' : '';
+  updateCount();
+  $('#btnAdd').disabled = n >= MAX_Q;
+  $('#btnAdd').lastChild.textContent = n >= MAX_Q ? 'Dosažen maximální počet 5 otázek' : 'Přidat otázku';
 }
 function questionCard(q, i, n) {
   const move = d => { const a = state.questions; const j = i + d; [a[i], a[j]] = [a[j], a[i]]; renderQuestions(); changed(); };
-  const typeSel = el('select', { title: 'Typ otázky' },
-    el('option', { value: 'abcd', text: 'Výběr ABCD' }), el('option', { value: 'yn', text: 'ANO / NE' }), el('option', { value: 'open', text: 'Otevřená otázka' }));
+  const typeSel = el('select', { title: 'Typ otázky' }, ...Object.entries(TYPE_LABEL).map(([v, t]) => el('option', { value: v, text: t })));
   typeSel.value = q.type;
   typeSel.addEventListener('change', () => { q.type = typeSel.value; renderQuestions(); changed(); });
   const pts = el('input', { type: 'number', min: 0, max: 50, step: 0.5, value: q.points, title: 'Počet bodů' });
-  pts.addEventListener('input', () => { q.points = num(pts.value, 0, 0, 50); $('#qCount').textContent = `${state.questions.length} z ${MAX_Q} otázek · ${fmtCz(totalPoints(state))} b.`; changed(); });
-  const tb = (d, title, fn, dis) => { const b = el('button', { class: 'icon-btn', title, onclick: fn }); b.append(icon(d)); b.disabled = !!dis; return b; };
+  pts.addEventListener('input', () => { q.points = num(pts.value, 0, 0, 50); updateCount(); changed(); });
+  // nabídka akcí
+  const menu = el('div', { class: 'menu' });
+  const mi = (d, label, fn, dis, cls) => { const b = el('button', { class: cls || '', onclick: fn }); b.append(icon(d), document.createTextNode(label)); b.disabled = !!dis; menu.append(b); };
+  mi(ICONS.up, 'Posunout nahoru', () => move(-1), i === 0);
+  mi(ICONS.down, 'Posunout dolů', () => move(1), i === n - 1);
+  mi(ICONS.dup, 'Duplikovat', () => { state.questions.splice(i + 1, 0, { ...JSON.parse(JSON.stringify(q)), id: uid() }); renderQuestions(); changed(); }, n >= MAX_Q);
+  menu.append(el('hr'));
+  mi(ICONS.del, n <= MIN_Q ? 'Smazat (min. 2 otázky)' : 'Smazat otázku', async () => {
+    const empty = !q.text.trim() && !q.options.some(o => o.trim());
+    if (!empty) { const r = await modal('Smazat otázku?', `Otázka č. ${i + 1} bude odstraněna.`, [{ label: 'Zrušit', value: null }, { label: 'Smazat', value: 1, kind: 'primary' }]); if (!r) return; }
+    state.questions.splice(i, 1); renderQuestions(); changed();
+  }, n <= MIN_Q, 'danger');
+  const moreBtn = el('button', { class: 'icon-btn sm', title: 'Další akce' }); moreBtn.append(icon(ICONS.dots));
+  bindMenu(moreBtn, menu);
+  const colBtn = el('button', { class: 'icon-btn sm', title: 'Sbalit / rozbalit' }); colBtn.append(icon(ICONS.chev)); colBtn.lastChild.classList.add('chev');
+  const summary = el('span', { class: 'sum', text: q.text.trim() || 'bez zadání' });
+  const card = el('div', { class: 'q' + (collapsed.has(q.id) ? ' collapsed' : ''), 'data-id': q.id });
+  const toggle = () => { collapsed.has(q.id) ? collapsed.delete(q.id) : collapsed.add(q.id); card.classList.toggle('collapsed'); summary.textContent = q.text.trim() || 'bez zadání'; };
+  colBtn.addEventListener('click', toggle); summary.addEventListener('click', toggle);
   const head = el('div', { class: 'q-h' },
-    el('span', { class: 'q-no', text: i + 1 }), typeSel,
-    el('span', { class: 'pts' }, pts, 'b.'),
-    el('div', { class: 'tools' },
-      tb(ICONS.up, 'Posunout nahoru', () => move(-1), i === 0),
-      tb(ICONS.down, 'Posunout dolů', () => move(1), i === n - 1),
-      tb(ICONS.dup, n >= MAX_Q ? 'Duplikovat (max. 5 otázek)' : 'Duplikovat', () => { state.questions.splice(i + 1, 0, { ...JSON.parse(JSON.stringify(q)), id: uid() }); renderQuestions(); changed(); }, n >= MAX_Q),
-      tb(ICONS.del, n <= MIN_Q ? 'Test musí mít alespoň 2 otázky' : 'Smazat', async () => {
-        const empty = !q.text.trim() && !q.options.some(o => o.trim());
-        if (!empty) { const r = await modal('Smazat otázku?', `Otázka č. ${i + 1} bude odstraněna.`, [{ label: 'Zrušit', value: null }, { label: 'Smazat', value: 1, kind: 'primary' }]); if (!r) return; }
-        state.questions.splice(i, 1); renderQuestions(); changed();
-      }, n <= MIN_Q)));
+    el('span', { class: 'q-no', text: i + 1 }), typeSel, el('span', { class: 'pts' }, pts, 'b.'), summary,
+    el('div', { class: 'tools' }, colBtn, el('div', { class: 'menu-wrap' }, moreBtn, menu)));
   const text = el('textarea', { class: 'qtext', rows: 2, maxlength: 400, placeholder: q.type === 'yn' ? 'Tvrzení nebo otázka, např. Python je programovací jazyk.' : 'Text zadání otázky' });
   text.value = q.text; text.addEventListener('input', () => { q.text = str(text.value, 400); changed(); });
-  const body = el('div', { class: 'q-b' }, el('div', { class: 'field' }, el('label', { text: q.type === 'yn' ? 'Tvrzení / otázka' : 'Zadání' }), text));
+  const body = el('div', { class: 'q-b' }, text);
   const secret = t => { const s = el('div', { class: 'secret' }); s.append(icon(ICONS.eye), document.createTextNode(t)); return s; };
   if (q.type === 'abcd') {
     const name = 'c_' + q.id;
-    ['A', 'B', 'C', 'D'].forEach((L, k) => {
+    q.options.forEach((opt, k) => {
       const r = el('input', { type: 'radio', name, title: 'Označit jako správnou odpověď' }); r.checked = q.correct === k;
       r.addEventListener('change', () => { q.correct = k; changed(); });
-      const t = el('input', { type: 'text', maxlength: 150, placeholder: `Odpověď ${L}` }); t.value = q.options[k];
+      const t = el('input', { type: 'text', maxlength: 150, placeholder: `Možnost ${LETTERS[k]}` }); t.value = opt;
       t.addEventListener('input', () => { q.options[k] = str(t.value, 150); changed(); });
-      body.append(el('div', { class: 'opt-row' }, el('span', { class: 'L', text: L + ')' }), r, t));
+      const rm = el('button', { class: 'icon-btn sm', title: q.options.length <= MIN_OPT ? 'Minimálně 2 možnosti' : 'Odebrat možnost' }); rm.append(icon(ICONS.x));
+      rm.disabled = q.options.length <= MIN_OPT;
+      rm.addEventListener('click', () => {
+        q.options.splice(k, 1);
+        if (q.correct === k) q.correct = null; else if (q.correct > k) q.correct--;
+        renderQuestions(); changed();
+      });
+      body.append(el('div', { class: 'opt-row' }, el('span', { class: 'L', text: LETTERS[k] + ')' }), r, t, rm));
     });
-    body.append(secret(q.correct == null ? 'Kolečkem označte správnou odpověď – uvidíte ji jen v klíči, ne na testu.' : 'Správná odpověď se zobrazí jen v klíči, na žákovském testu ne.'));
+    const foot = el('div', { class: 'row' });
+    if (q.options.length < MAX_OPT) {
+      const add = el('button', { class: 'btn small ghost', onclick: () => { q.options.push(''); renderQuestions(); changed(); setTimeout(() => { const ins = $$(`.q[data-id="${q.id}"] .opt-row input[type=text]`); ins.length && ins[ins.length - 1].focus(); }, 30); } });
+      add.append(icon(ICONS.plus), document.createTextNode('Přidat možnost ' + LETTERS[q.options.length]));
+      foot.append(add);
+    }
+    foot.append(el('span', { class: 'grow' }), secret(q.correct == null ? 'Kolečkem označte správnou odpověď (jen do klíče).' : 'Správnost uvidíte jen v klíči.'));
+    body.append(foot);
   } else if (q.type === 'yn') {
     const seg = el('div', { class: 'seg' });
     [['ano', 'ANO'], ['ne', 'NE']].forEach(([v, l]) => seg.append(el('button', { class: q.ynCorrect === v ? 'on' : '', text: l, onclick: () => { q.ynCorrect = q.ynCorrect === v ? null : v; renderQuestions(); changed(); } })));
-    body.append(el('div', { class: 'inline' }, el('span', { class: 'lbl', text: 'Správná odpověď' }), seg), secret('Na testu budou dvě prázdná políčka ☐ ANO ☐ NE. Správnost uvidíte jen v klíči.'));
+    body.append(el('div', { class: 'row' }, el('span', { class: 'lbl', text: 'Správná odpověď' }), seg, el('span', { class: 'grow' }), secret('Na testu budou dvě prázdná políčka.')));
   } else {
     const lines = el('select', { style: 'width:auto' }); for (let k = 1; k <= 5; k++) lines.append(el('option', { value: k, text: k + (k === 1 ? ' řádek' : k < 5 ? ' řádky' : ' řádků') }));
     lines.value = q.lines; lines.addEventListener('change', () => { q.lines = Number(lines.value); changed(); });
     const seg = el('div', { class: 'seg' });
-    [['solid', 'Plné linky'], ['dotted', 'Tečkované'], ['blank', 'Prázdné místo']].forEach(([v, l]) => seg.append(el('button', { class: q.lineStyle === v ? 'on' : '', text: l, onclick: () => { q.lineStyle = v; renderQuestions(); changed(); } })));
-    body.append(el('div', { class: 'inline' }, el('span', { class: 'lbl', text: 'Prostor pro odpověď' }), lines, seg));
-    const hs = el('div'); makeSlider(hs, ['lineHeight', 'Výška řádku pro psaní', 4, 12, 0.5, 'mm'], () => q, changed)._sync();
-    body.append(hs);
-    const model = el('textarea', { rows: 2, maxlength: 400, placeholder: 'Vzorová odpověď pro klíč (nepovinné)' }); model.value = q.model;
+    [['solid', 'Linky'], ['dotted', 'Tečky'], ['blank', 'Prázdné']].forEach(([v, l]) => seg.append(el('button', { class: q.lineStyle === v ? 'on' : '', text: l, onclick: () => { q.lineStyle = v; renderQuestions(); changed(); } })));
+    body.append(el('div', { class: 'row' }, lines, seg));
+    const det = el('details', { class: 'more', style: 'margin-top:0' });
+    const sum = el('summary'); sum.append(document.createTextNode('Výška řádků a vzorová odpověď do klíče'), icon(ICONS.chev)); sum.lastChild.classList.add('chev');
+    const inner = el('div', { class: 'in' });
+    makeSlider(inner, ['lineHeight', 'Výška řádku pro psaní', 4, 12, 0.5, 'mm'], () => q, changed)._sync();
+    const model = el('textarea', { rows: 2, maxlength: 400, placeholder: 'Vzorová odpověď (zobrazí se jen v klíči)' }); model.value = q.model;
     model.addEventListener('input', () => { q.model = str(model.value, 400); persist(); });
-    body.append(el('div', { class: 'field' }, el('label', {}, 'Vzorová odpověď ', el('span', { class: 'opt', text: '(jen do klíče)' })), model));
+    inner.append(model); det.append(sum, inner); body.append(det);
   }
-  body.append(el('div', { class: 'q-warn', text: 'Tato otázka se už nevejde do čtvrtiny A4.' }));
-  return el('div', { class: 'q', 'data-id': q.id }, head, body);
+  body.append(el('div', { class: 'q-warn', text: 'Tato otázka se už nevejde do jedné kopie testu.' }));
+  card.append(head, body);
+  return card;
 }
 
 /* =====================================================================
    PROJEKTY – uložení, otevření, nový test
    ===================================================================== */
 function saveProject() {
-  const data = { app: 'SestaApp-GRID', version: 1, savedAt: new Date().toISOString(), state: { ...state, logo: { ...state.logo, w: undefined, h: undefined } } };
-  download(enc.encode(JSON.stringify(data, null, 2)), safeFileName(state.info.title) + '.json', 'application/json');
+  const data = { app: 'SestaApp-GRID', version: 2, savedAt: new Date().toISOString(), state: { ...state, logo: { ...state.logo, w: undefined, h: undefined } } };
+  download(enc.encode(JSON.stringify(data, null, 2)), fileName(state) + '.json', 'application/json');
   toast('Projekt byl uložen do souboru JSON.');
 }
 async function openProject(file) {
@@ -1542,18 +1707,25 @@ async function openProject(file) {
     const data = JSON.parse(await file.text());
     const src = data && data.state ? data.state : data;
     if (!src || !Array.isArray(src.questions)) throw new Error('Soubor neobsahuje projekt SestaApp – GRID.');
-    state = sanitizeState(src); state.isSample = false; logoSizeFor = null;
+    state = sanitizeState(src); state.isSample = false; logoSizeFor = null; collapsed.clear();
     syncAll(); changed(); await ensureFont(state.style.font); updateFontNotice();
     toast('Projekt byl načten.');
   } catch (e) { toast('Projekt nelze otevřít: ' + (e.message || 'neplatný soubor'), true); }
 }
 async function newTest() {
-  const r = await modal('Nový test', 'Aktuální zadání se vymaže. Nastavení vzhledu, logo a pole na testu zůstanou zachované.\nPokud chcete současný test ponechat, nejdřív ho uložte tlačítkem „Uložit projekt“.',
+  const r = await modal('Nový test', 'Aktuální zadání se vymaže. Vzhled, logo a pole na testu zůstanou zachované.\nPokud chcete současný test ponechat, nejdřív ho uložte jako projekt.',
     [{ label: 'Zrušit', value: null }, { label: 'Uložit a začít nový', value: 'save' }, { label: 'Vymazat a začít nový', value: 'new', kind: 'primary' }]);
   if (!r) return;
   if (r === 'save') saveProject();
-  state = emptyState(state); syncAll(); changed();
+  state = emptyState(state); collapsed.clear(); syncAll(); changed();
+  $('#tabs button[data-tab="test"]').click();
   setTimeout(() => $('#inTitle').focus(), 50);
+}
+async function loadSample() {
+  const r = await modal('Načíst ukázkový test?', 'Aktuální zadání se nahradí ukázkovým testem z informatiky. Vzhled a logo zůstanou.', [{ label: 'Zrušit', value: null }, { label: 'Načíst ukázku', value: 1, kind: 'primary' }]);
+  if (!r) return;
+  const keep = state; state = sampleState(); state.style = { ...keep.style }; state.logo = keep.logo; state.fields = { ...keep.fields };
+  collapsed.clear(); syncAll(); changed();
 }
 
 /* =====================================================================
@@ -1566,7 +1738,7 @@ async function init() {
   if (saved && saved.state) {
     try { state = sanitizeState(saved.state); } catch (e) { state = sampleState(); saved = null; }
   }
-  syncAll(); syncViewUI(); render();
+  syncAll(); render();
   ensureFont(state.style.font).then(updateFontNotice).catch(() => {});
   autoSystemFonts();
   if (saved && saved.state) {
@@ -1575,7 +1747,7 @@ async function init() {
     const r = await modal('Pokračovat v rozpracovaném testu?', `Naposledy jste pracovali na testu „${name}“${when ? ' (' + when + ')' : ''}.`,
       [{ label: 'Prázdný test', value: 'empty' }, { label: 'Ukázkový test', value: 'sample' }, { label: 'Pokračovat', value: 'cont', kind: 'primary' }]);
     if (r === 'empty') { state = emptyState(state); syncAll(); changed(); }
-    else if (r === 'sample') { const keepLogo = state.logo; state = sampleState(); state.logo = keepLogo; syncAll(); changed(); }
+    else if (r === 'sample') { const keep = state; state = sampleState(); state.style = { ...keep.style }; state.logo = keep.logo; syncAll(); changed(); }
   } else persist();
 }
 if (!EMBED_FONTS) { document.body.innerHTML = '<p style="padding:40px;font-family:sans-serif">Chybí vložená písma – soubor aplikace je poškozený. Stáhněte prosím znovu SestaApp-GRID.html.</p>'; }
